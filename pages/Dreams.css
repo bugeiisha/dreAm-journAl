@@ -762,25 +762,29 @@
   }
 
   .dreams-main-layout {
-    grid-template-columns: minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
     height: auto;
   }
 
   .dreams-list-panel {
-    height: auto;
+    height: 60vh;
+    overflow-y: auto;
   }
 
   .dreams-scroll-area {
     max-height: none;
-    overflow: visible;
+    overflow-y: auto;
   }
 
   .dream-preview-panel {
-    min-height: 700px;
+    min-height: 60vh;
+    max-height: 80vh;
+    overflow-y: auto;
   }
 
   .dream-preview-scroll {
-    overflow: visible;
+    overflow-y: auto;
   }
 }
 
