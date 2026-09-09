@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import './Sidebar.css'
 
@@ -16,63 +17,83 @@ const tagsNavigation = [
 ]
 
 function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const closeMenu = () => setIsOpen(false)
+
   return (
-    <aside className="sidebar">
-      <div className="sidebar-logo">
-        <div className="moon-icon">☾</div>
+    <>
+      {/* Bouton hamburger, visible seulement en mobile via le CSS */}
+      <button
+        className="menu-toggle"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Ouvrir le menu"
+      >
+        {isOpen ? '✕' : '☰'}
+      </button>
 
-        <div>
-          <h1>Dream Journal</h1>
-          <p>Mon univers onirique</p>
-        </div>
-      </div>
+      {/* Overlay sombre derrière le menu ouvert, ferme au clic */}
+      {isOpen && <div className="sidebar-overlay" onClick={closeMenu} />}
 
-      <nav className="navigation">
-        <div className="navigation-section">
-          <p className="section-title">NAVIGATION</p>
+      <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
+        <div className="sidebar-logo">
+          <div className="moon-icon">☾</div>
 
-          {mainNavigation.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              end={item.path === '/'}
-              className={({ isActive }) =>
-                `nav-item ${isActive ? 'active' : ''}`
-              }
-            >
-              <span className="nav-icon">{item.icon}</span>
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
+          <div>
+            <h1>Dream Journal</h1>
+            <p>Mon univers onirique</p>
+          </div>
         </div>
 
-        <div className="sidebar-divider" />
+        <nav className="navigation">
+          <div className="navigation-section">
+            <p className="section-title">NAVIGATION</p>
 
-        <div className="navigation-section">
-          <p className="section-title">EXPLORER</p>
+            {mainNavigation.map((item) => (
+              <NavLink
+                key={item.label}
+                to={item.path}
+                end={item.path === '/'}
+                onClick={closeMenu}
+                className={({ isActive }) =>
+                  `nav-item ${isActive ? 'active' : ''}`
+                }
+              >
+                <span className="nav-icon">{item.icon}</span>
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
+          </div>
 
-          {tagsNavigation.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              className={({ isActive }) =>
-                `nav-item ${isActive ? 'active' : ''}`
-              }
-            >
-              <span className="nav-icon">{item.icon}</span>
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
+          <div className="sidebar-divider" />
+
+          <div className="navigation-section">
+            <p className="section-title">EXPLORER</p>
+
+            {tagsNavigation.map((item) => (
+              <NavLink
+                key={item.label}
+                to={item.path}
+                onClick={closeMenu}
+                className={({ isActive }) =>
+                  `nav-item ${isActive ? 'active' : ''}`
+                }
+              >
+                <span className="nav-icon">{item.icon}</span>
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
+          </div>
+        </nav>
+
+        <div className="sidebar-footer">
+          <NavLink to="/parametres" className="settings-button" onClick={closeMenu}>
+            <span className="nav-icon">⚙</span>
+            Paramètres
+          </NavLink>
         </div>
-      </nav>
-
-      <div className="sidebar-footer">
-        <NavLink to="/parametres" className="settings-button">
-          <span className="nav-icon">⚙</span>
-          Paramètres
-        </NavLink>
-      </div>
-    </aside>
+      </aside>
+    </>
   )
 }
 
