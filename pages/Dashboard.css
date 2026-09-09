@@ -224,12 +224,50 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 480px) {
+  .dashboard-header h2 {
+    font-size: 26px;
+    letter-spacing: -0.8px;
+  }
+
+  .dashboard-header p {
+    font-size: 13px;
+  }
+
   .dashboard-header {
-    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .primary-button {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 17px;
   }
 
   .stats-grid {
-    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .dashboard-content {
+    gap: 16px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .section-header h3 {
+    font-size: 17px;
+  }
+
+  .insight-card {
+    padding: 18px;
+  }
+
+  .insight-card h3 {
+    font-size: 18px;
   }
 }
