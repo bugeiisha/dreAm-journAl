@@ -1,0 +1,393 @@
+/* =========================
+   PAGE
+========================= */
+
+.stats-page {
+  width: 100%;
+  padding-bottom: 60px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.stats-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 38px;
+}
+
+.stats-header h2 {
+  margin: 8px 0 7px;
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -1.4px;
+}
+
+.stats-header p {
+  margin: 0;
+  color: #8e8a9d;
+  font-size: 14px;
+}
+
+.section-eyebrow {
+  color: #a88dff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* =========================
+   OVERVIEW
+========================= */
+
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 52px;
+}
+
+/* Au cas où StatCard utilise cette structure */
+
+.stats-overview > * {
+  min-height: 150px;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.stats-section {
+  margin-bottom: 44px;
+}
+
+.stats-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.stats-section-header h3 {
+  margin: 5px 0 4px;
+  color: #eeeaf7;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+
+.stats-section-header p {
+  margin: 0;
+  color: #777284;
+  font-size: 12px;
+}
+
+/* =========================
+   CHART CARDS
+========================= */
+
+.chart-card {
+  position: relative;
+  min-height: 320px;
+  padding: 24px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.018)
+    );
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 20px;
+}
+
+.chart-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 220px;
+  height: 220px;
+  content: '';
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(132, 97, 235, 0.08),
+    transparent 68%
+  );
+  transform: translate(35%, -35%);
+}
+
+.chart-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   GRAPHIQUES
+========================= */
+
+.stats-chart-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+  gap: 18px;
+}
+
+.stats-chart-grid .stats-section {
+  margin-bottom: 0;
+}
+
+/* =========================
+   LOADING / EMPTY
+========================= */
+
+.stats-loading,
+.empty-chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  color: #777284;
+}
+
+.empty-chart {
+  flex-direction: column;
+  gap: 12px;
+  padding: 30px;
+  text-align: center;
+}
+
+.empty-chart span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  color: #aa8fff;
+  font-size: 24px;
+  background: rgba(132, 97, 235, 0.1);
+  border-radius: 14px;
+}
+
+.empty-chart p {
+  margin: 0;
+  font-size: 12px;
+}
+
+/* =========================
+   DREAM WORLD SUMMARY
+========================= */
+
+.dream-world-section {
+  margin-top: 52px;
+}
+
+.dream-world-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.dream-world-summary > div {
+  position: relative;
+  min-height: 150px;
+  padding: 22px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.02)
+    );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+}
+
+.dream-world-summary > div::after {
+  position: absolute;
+  right: -20px;
+  bottom: -35px;
+  width: 120px;
+  height: 120px;
+  content: '';
+  background: radial-gradient(
+    circle,
+    rgba(139, 105, 236, 0.08),
+    transparent 70%
+  );
+}
+
+.dream-world-summary span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin-bottom: 7px;
+  color: #f1edf9;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+
+.dream-world-summary p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: #777284;
+  font-size: 12px;
+}
+
+/* =========================
+   TAG STATS
+========================= */
+
+.tag-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tag-stats-card {
+  min-height: 250px;
+  padding: 22px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.018)
+    );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+}
+
+.tag-stats-card h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 20px;
+  color: #ded8e9;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tag-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tag-ranking-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 0 8px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.tag-ranking-row:hover {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.tag-rank {
+  color: #615c6f;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.tag-name {
+  overflow: hidden;
+  color: #aaa5b8;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag-count {
+  min-width: 30px;
+  padding: 4px 7px;
+  color: #b9a3ff;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  background: rgba(135, 100, 230, 0.1);
+  border-radius: 7px;
+}
+
+.no-stats-data {
+  padding: 30px 0;
+  color: #706b7c;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* =========================
+   CHARTS RECHARTS
+========================= */
+
+.recharts-cartesian-grid line {
+  stroke: rgba(255, 255, 255, 0.055);
+}
+
+.recharts-text {
+  fill: #706b7c;
+  font-size: 10px;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+  .stats-overview {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tag-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tag-stats-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 800px) {
+  .stats-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dream-world-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .stats-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-header h2 {
+    font-size: 32px;
+  }
+
+  .chart-card {
+    min-height: 280px;
+    padding: 18px;
+  }
+}

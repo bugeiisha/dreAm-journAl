@@ -1,0 +1,143 @@
+.dream-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 14px;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.dream-card:hover {
+  background: rgba(255, 255, 255, 0.045);
+  transform: translateY(-1px);
+}
+
+.dream-image {
+  flex-shrink: 0;
+
+  width: 78px;
+  height: 78px;
+
+  background-position: center;
+  background-size: cover;
+
+  border-radius: 12px;
+}
+
+.dream-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #a98cff;
+
+  font-size: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 93, 212, 0.25),
+      rgba(31, 26, 65, 0.6)
+    );
+}
+
+.dream-card-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.dream-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.dream-card h3 {
+  overflow: hidden;
+
+  margin: 0;
+
+  color: #f3f1f8;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dream-date {
+  flex-shrink: 0;
+
+  color: #716d80;
+
+  font-size: 11px;
+}
+
+.dream-preview {
+  overflow: hidden;
+
+  display: -webkit-box;
+
+  margin: 7px 0 10px;
+
+  color: #9a96a8;
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.dream-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dream-tag {
+  padding: 4px 8px;
+
+  color: #aaa5bc;
+
+  font-size: 10px;
+
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+}
+
+.mood {
+  flex-shrink: 0;
+
+  padding: 6px 9px;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  border-radius: 8px;
+}
+
+.mood-positive {
+  color: #78d6a7;
+  background: rgba(70, 185, 125, 0.12);
+}
+
+.mood-negative {
+  color: #f38b9b;
+  background: rgba(224, 92, 114, 0.12);
+}
+
+.mood-neutral {
+  color: #b0a8d7;
+  background: rgba(155, 133, 220, 0.12);
+}

@@ -1,0 +1,323 @@
+.dream-map-page {
+  width: 100%;
+}
+
+.dream-map-header {
+  margin-bottom: 30px;
+}
+
+.dream-map-header h2 {
+  margin: 9px 0 7px;
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -1.4px;
+}
+
+.dream-map-header p {
+  margin: 0;
+  color: #8e8a9d;
+  font-size: 14px;
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.dream-map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  min-height: 1000px;
+}
+
+/* =========================
+   CANVAS
+========================= */
+
+.dream-map-canvas {
+  position: relative;
+  min-height: 1000px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(122, 91, 220, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 75% 70%,
+      rgba(79, 61, 145, 0.12),
+      transparent 35%
+    ),
+    rgba(255, 255, 255, 0.018);
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 22px;
+}
+
+/* Décoration */
+
+.dream-map-canvas::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 60px 60px;
+}
+
+/* =========================
+   MAP NODE
+========================= */
+
+.map-place-node {
+  position: absolute !important;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px;
+  color: #e7e0f5;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      rgba(176, 151, 255, 0.2),
+      rgba(84, 59, 152, 0.18)
+    );
+
+  border: 1px solid rgba(160, 132, 255, 0.35);
+  border-radius: 50%;
+  cursor: grab;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.map-place-node:hover {
+  border-color: rgba(185, 162, 255, 0.8);
+  box-shadow:
+    0 0 35px rgba(128, 96, 225, 0.2);
+  transform: scale(1.04);
+}
+
+.map-place-node:active {
+  cursor: grabbing;
+}
+
+.map-place-node.selected {
+  border-color: #d8ccff;
+
+  box-shadow:
+    0 0 0 5px rgba(156, 121, 255, 0.1),
+    0 0 45px rgba(128, 96, 225, 0.35);
+}
+
+.map-place-node strong {
+  max-width: 100%;
+  overflow: hidden;
+  color: #f1ecfb;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-place-node small {
+  margin-top: 4px;
+  color: #aaa0c3;
+  font-size: 9px;
+}
+
+.map-place-icon {
+  margin-bottom: 5px;
+  color: #c8b7ff;
+  font-size: 18px;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.map-empty-state {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+  text-align: center;
+}
+
+.map-empty-state > span {
+  margin-bottom: 14px;
+  color: #a68cff;
+  font-size: 40px;
+}
+
+.map-empty-state h3 {
+  margin: 0 0 8px;
+  color: #e1dcea;
+  font-size: 17px;
+}
+
+.map-empty-state p {
+  max-width: 300px;
+  margin: 0;
+  color: #817c8e;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.map-sidebar {
+  display: flex;
+  flex-direction: column;
+
+  padding: 22px;
+
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+}
+
+.map-sidebar-eyebrow,
+.map-section-label {
+  display: block;
+  color: #9f90c9;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.map-sidebar-heading h3 {
+  margin: 8px 0 8px;
+  color: #f0ebf8;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.map-sidebar-heading p {
+  margin: 0;
+  color: #898392;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.map-sidebar-heading strong {
+  color: #bcaeff;
+  font-weight: 500;
+}
+
+.map-related-dreams {
+  margin-top: 30px;
+}
+
+.map-dream-item {
+  display: flex;
+  gap: 10px;
+
+  margin-top: 12px;
+  padding: 12px;
+
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  border-radius: 12px;
+}
+
+.map-dream-item > span {
+  color: #aa93ff;
+}
+
+.map-dream-item strong {
+  display: block;
+  color: #d7d1e1;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.map-dream-item small {
+  display: block;
+  margin-top: 3px;
+  color: #777281;
+  font-size: 10px;
+}
+
+/* =========================
+   EMPTY SIDEBAR
+========================= */
+
+.map-sidebar-empty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.map-sidebar-empty > span {
+  margin-bottom: 14px;
+  color: #a68cff;
+  font-size: 32px;
+}
+
+.map-sidebar-empty h3 {
+  margin: 0 0 8px;
+  color: #ded8e8;
+  font-size: 15px;
+}
+
+.map-sidebar-empty p {
+  margin: 0;
+  color: #7c7786;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .dream-map-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .map-sidebar {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .dream-map-canvas {
+    min-height: 500px;
+  }
+
+  .dream-map-header h2 {
+    font-size: 32px;
+  }
+}

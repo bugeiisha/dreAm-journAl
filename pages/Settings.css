@@ -1,0 +1,143 @@
+.settings-page {
+  width: 100%;
+  max-width: 1300px;
+}
+
+.settings-header {
+  margin-bottom: 40px;
+}
+
+.settings-header h2 {
+  margin: 9px 0 7px;
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -1.4px;
+}
+
+.settings-header p {
+  margin: 0;
+  color: #8e8a9d;
+  font-size: 14px;
+}
+
+.settings-section {
+  max-width: 850px;
+}
+
+.settings-section-header {
+  margin-bottom: 16px;
+}
+
+.settings-section-header h3 {
+  margin: 6px 0 5px;
+  color: #eeeaf7;
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.settings-section-header p {
+  margin: 0;
+  color: #777284;
+  font-size: 12px;
+}
+
+.section-eyebrow {
+  color: #a88dff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+}
+
+.settings-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.02)
+    );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+}
+
+.settings-card-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: #b9a3ff;
+  font-size: 24px;
+  background: rgba(135, 100, 230, 0.1);
+  border-radius: 12px;
+}
+
+.settings-card-content {
+  flex: 1;
+}
+
+.settings-card-content h4 {
+  margin: 0 0 5px;
+  color: #eeeaf7;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.settings-card-content p {
+  max-width: 520px;
+  margin: 0;
+  color: #777284;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.settings-card + .settings-card {
+  margin-top: 12px;
+}
+
+.secondary-button {
+  padding: 10px 16px;
+  color: #b9a3ff;
+  font: inherit;
+  font-size: 12px;
+  background: rgba(135, 100, 230, 0.1);
+  border: 1px solid rgba(155, 121, 255, 0.25);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: rgba(135, 100, 230, 0.18);
+  border-color: rgba(155, 121, 255, 0.45);
+}
+
+.secondary-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.import-message {
+  margin: 12px 0 0;
+  color: #8bd9b2;
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .settings-card {
+    flex-wrap: wrap;
+  }
+
+  .settings-card .primary-button {
+    width: 100%;
+    margin-top: 5px;
+  }
+}
