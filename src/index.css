@@ -56,3 +56,19 @@ button {
 .placeholder-page p {
   color: #8e8a9d;
 }
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 24px 20px 24px;
+    padding-top: 76px;
+  }
+
+  .dashboard-placeholder h2 {
+    font-size: 28px;
+    letter-spacing: -0.8px;
+  }
+
+  .dashboard-placeholder p {
+    font-size: 14px;
+  }
+}
