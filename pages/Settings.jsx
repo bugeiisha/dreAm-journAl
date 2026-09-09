@@ -8,9 +8,14 @@ function Settings() {
     const [importMessage, setImportMessage] = useState('')
     const [isImporting, setIsImporting] = useState(false)
     const fileInputRef = useRef(null)
+    const backupFileInputRef = useRef(null)
 
     function handleImportClick() {
     fileInputRef.current?.click()
+  }
+
+  function handleBackupImportClick() {
+    backupFileInputRef.current?.click()
   }
 
   async function handleLucidityImport(event) {
@@ -64,6 +69,65 @@ function Settings() {
 
       setImportMessage(
         'Une erreur est survenue pendant l’importation.',
+      )
+    } finally {
+      setIsImporting(false)
+
+      event.target.value = ''
+    }
+  }
+
+  async function handleBackupImport(event) {
+    const file = event.target.files?.[0]
+
+    if (!file) return
+
+    setIsImporting(true)
+    setImportMessage('')
+
+    try {
+      const text = await file.text()
+      const backup = JSON.parse(text)
+
+      const dreams = backup.dreams
+
+      if (!Array.isArray(dreams) || dreams.length === 0) {
+        setImportMessage(
+          'Ce fichier ne contient aucun rêve valide.',
+        )
+
+        return
+      }
+
+      const confirmed = window.confirm(
+        `${dreams.length} rêve${
+          dreams.length > 1 ? 's' : ''
+        } trouvé${
+          dreams.length > 1 ? 's' : ''
+        } dans la sauvegarde.\n\nVoulez-vous les importer ?`,
+      )
+
+      if (!confirmed) {
+        return
+      }
+
+      await addDreams(dreams)
+
+      setImportMessage(
+        `✓ ${dreams.length} rêve${
+          dreams.length > 1 ? 's' : ''
+        } restauré${
+          dreams.length > 1 ? 's' : ''
+        } avec succès.`,
+      )
+    } catch (error) {
+      console.error(
+        'Impossible de restaurer la sauvegarde :',
+        error,
+      )
+
+      setImportMessage(
+        'Le fichier n’est pas une sauvegarde JSON valide.',
       )
     } finally {
       setIsImporting(false)
@@ -127,6 +191,41 @@ return (
             Exporter
           </button>
         </div>
+
+        <div className="settings-card">
+          <div className="settings-card-icon">
+            ↻
+          </div>
+
+          <div className="settings-card-content">
+            <h4>Restaurer une sauvegarde</h4>
+
+            <p>
+              Réimporte tes rêves depuis un fichier de
+              sauvegarde JSON exporté précédemment.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={handleBackupImportClick}
+            disabled={isImporting}
+          >
+            {isImporting
+              ? 'Importation...'
+              : 'Restaurer'}
+          </button>
+
+          <input
+            ref={backupFileInputRef}
+            type="file"
+            accept=".json,application/json"
+            className="hidden-file-input"
+            onChange={handleBackupImport}
+          />
+        </div>
+
         <div className="settings-card">
         <div className="settings-card-icon">
           ↑
