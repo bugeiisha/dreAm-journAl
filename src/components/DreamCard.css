@@ -56,20 +56,19 @@
   align-items: center;
   justify-content: space-between;
   gap: 15px;
+  min-width: 0;
 }
 
 .dream-card h3 {
   overflow: hidden;
-
   margin: 0;
-
   color: #f3f1f8;
-
   font-size: 15px;
   font-weight: 500;
-
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .dream-date {
