@@ -1,15 +1,12 @@
 .dream-card {
   display: flex;
   align-items: center;
+  min-width: 0;
   gap: 18px;
-
   padding: 14px;
-
   background: rgba(255, 255, 255, 0.025);
-
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
-
   transition:
     background 0.2s ease,
     transform 0.2s ease;
