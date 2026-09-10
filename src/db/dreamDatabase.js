@@ -1,7 +1,7 @@
 import { openDB } from 'idb'
 
 const DB_NAME = 'oneiric-journal'
-const DB_VERSION = 3
+const DB_VERSION = 2
 
 const dbPromise = openDB(DB_NAME, DB_VERSION, {
   upgrade(db) {
@@ -52,6 +52,17 @@ export async function deleteDream(id) {
   )
 }
 
+export async function getAllMapPositions() {
+  return dbPromise.then((db) =>
+    db.getAll('mapPositions'),
+  )
+}
+
+export async function saveMapPosition(position) {
+  return dbPromise.then((db) =>
+    db.put('mapPositions', position),
+  )
+}
 export async function addDreams(dreams) {
   return dbPromise.then(async (db) => {
     const transaction = db.transaction(
@@ -66,54 +77,4 @@ export async function addDreams(dreams) {
       transaction.done,
     ])
   })
-}
-
-// =========================
-// CARTE ONIRIQUE
-// =========================
-
-export async function getAllMapPositions() {
-  return dbPromise.then((db) =>
-    db.getAll('mapPositions'),
-  )
-}
-
-export async function saveMapPosition(position) {
-  return dbPromise.then((db) =>
-    db.put('mapPositions', position),
-  )
-}
-
-// =========================
-// PERSONNAGES / PR
-// =========================
-
-export async function getAllCharacters() {
-  return dbPromise.then((db) =>
-    db.getAllFromIndex('characters', 'name'),
-  )
-}
-
-export async function getCharacter(id) {
-  return dbPromise.then((db) =>
-    db.get('characters', Number(id)),
-  )
-}
-
-export async function addCharacter(character) {
-  return dbPromise.then((db) =>
-    db.add('characters', character),
-  )
-}
-
-export async function updateCharacter(character) {
-  return dbPromise.then((db) =>
-    db.put('characters', character),
-  )
-}
-
-export async function deleteCharacter(id) {
-  return dbPromise.then((db) =>
-    db.delete('characters', Number(id)),
-  )
 }
