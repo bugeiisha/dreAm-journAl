@@ -6,6 +6,8 @@ import Dashboard from '../pages/Dashboard'
 import Stats from '../pages/Stats'
 import DreamMap from '../pages/DreamMap'
 import Settings from '../pages/Settings'
+import Quests from '../pages/Quests'
+import QuestEditor from '../pages/QuestEditor'
 
 function PlaceholderPage({ title }) {
   return (
@@ -27,6 +29,9 @@ function App() {
           <Route path="/reves" element={<Dreams />} />
           <Route path="/reves/nouveau" element={<DreamEditor />} />
           <Route path="/reves/:dreamId" element={<DreamEditor />} />
+          <Route path="/quetes" element={<Quests />} />
+          <Route path="/quetes/nouvelle" element={<QuestEditor />} />
+          <Route path="/quetes/:questId" element={<QuestEditor />} />
           <Route path="/carte" element={<DreamMap />} />
           <Route path="/characters" element={<PlaceholderPage title="Characters" />}/>
           <Route path="/places" element={<PlaceholderPage title="Places" />}/>

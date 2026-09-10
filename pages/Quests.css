@@ -1,0 +1,177 @@
+.quests-page {
+  padding: 24px;
+}
+
+.quests-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.quests-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(220px, 1fr)
+  );
+  gap: 20px;
+}
+
+.quest-card {
+  background: #1c1c24;
+  border: 1px solid #2c2c38;
+  border-radius: 18px;
+  padding: 18px;
+  min-height: 220px;
+
+  display: flex;
+  flex-direction: column;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.quest-card:hover {
+  transform: translateY(-3px);
+}
+
+.quest-number {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+
+.quest-card h3 {
+  margin-bottom: 12px;
+}
+
+.quest-card p {
+  flex: 1;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.quest-footer {
+  margin-top: 16px;
+  font-size: 0.85rem;
+}
+
+.quest-card.todo {
+  border-left: 4px solid #f4c542;
+}
+
+.quest-card.success {
+  border-left: 4px solid #48c774;
+}
+
+.quest-card.failed {
+  border-left: 4px solid #ff5c5c;
+}
+.quests-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.quests-left {
+  flex: 1;
+}
+
+.quests-right {
+  width: 380px;
+  flex-shrink: 0;
+
+  background: #1c1c24;
+  border: 1px solid #2c2c38;
+  border-radius: 20px;
+  padding: 24px;
+
+  position: sticky;
+  top: 24px;
+}
+.quest-preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.quest-back-button,
+.quest-edit-button {
+  color: #918ba3;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.quest-back-button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 8px;
+  font-size: 12px;
+}
+
+.quest-back-button:hover {
+  color: #d4c9ff;
+}
+
+.quest-edit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+.quest-edit-button:hover {
+  color: #ded5ff;
+  background: rgba(255, 255, 255, 0.06);
+}
+.quest-delete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  color: #f094a4;
+  font-size: 16px;
+  background: rgba(224, 92, 114, 0.08);
+  border: 1px solid rgba(224, 92, 114, 0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.quest-delete-button:hover {
+  background: rgba(224, 92, 114, 0.16);
+  border-color: rgba(224, 92, 114, 0.45);
+  transform: translateY(-1px);
+}
+.linked-dreams {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.linked-dream-button {
+  background: transparent;
+  border: 1px solid #2c2c38;
+  border-radius: 10px;
+
+  padding: 10px;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.linked-dream-button:hover {
+  border-color: #8b5cf6;
+}

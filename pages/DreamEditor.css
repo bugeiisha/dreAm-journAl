@@ -386,7 +386,27 @@
 
   cursor: pointer;
 }
+.quest-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
 
+.quest-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px;
+  border-radius: 10px;
+
+  background: rgba(255,255,255,0.03);
+}
+
+.quest-checkbox input {
+  cursor: pointer;
+}
 /* =========================
    IMAGE
 ========================= */

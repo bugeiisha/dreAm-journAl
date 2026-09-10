@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, } from 'react-router-dom'
-
-import { addDream, getAllDreams, getDream, updateDream as updateSavedDream, } from '../src/db/dreamDatabase'
+import { addDream, getAllDreams, getDream, updateDream as updateSavedDream,  getAllQuests } from '../src/db/dreamDatabase'
 
 import './DreamEditor.css'
 
@@ -22,6 +21,7 @@ function createInitialDream() {
     places: [],
     objects: [],
     other: [],
+    linkedQuests: [],
     notes: '',
     image: null,
   }
@@ -89,6 +89,16 @@ function DreamEditor() {
   const [dream, setDream] = useState(
     createInitialDream(),
   )
+  const [allQuests, setAllQuests] = useState([])
+  useEffect(() => {
+  async function loadQuests() {
+    const quests = await getAllQuests()
+    setAllQuests(quests)
+  }
+
+  loadQuests()
+}, [])
+
 
   const [isLoading, setIsLoading] = useState(
     isEditing,
@@ -192,6 +202,17 @@ function DreamEditor() {
         : 0,
     }
   })
+}
+  /* =========================
+     QUEST
+  ========================= */
+function toggleQuest(questId) {
+  setDream((prev) => ({
+    ...prev,
+    linkedQuests: prev.linkedQuests.includes(questId)
+      ? prev.linkedQuests.filter(id => id !== questId)
+      : [...prev.linkedQuests, questId]
+  }))
 }
 
   /* =========================
@@ -773,6 +794,47 @@ function DreamEditor() {
             }
           />
         </section>
+        {/* =========================
+            QUÊTES LIÉES
+        ========================= */}
+        
+        <div className="form-section">
+          <h3>⚑ Quêtes liées</h3>
+                
+          <div className="quest-selector">
+            {allQuests.length === 0 ? (
+              <p>Aucune quête créée.</p>
+            ) : (
+              allQuests.map((quest) => (
+                <label
+                  key={quest.id}
+                  className="quest-checkbox"
+                >
+                  <input
+                    type="checkbox"
+                    checked={
+                      dream.linkedQuests?.includes(
+                        quest.id,
+                      ) || false
+                    }
+                    onChange={() =>
+                      toggleQuest(quest.id)
+                    }
+                  />
+        
+                  <span>
+                    {quest.source === 'iktomi'
+                      ? `IK-${quest.numero}`
+                      : `P-${quest.id}`}
+        
+                    {' - '}
+                    {quest.title}
+                  </span>
+                </label>
+              ))
+            )}
+          </div>
+        </div>
 
         {/* =========================
             NOTES

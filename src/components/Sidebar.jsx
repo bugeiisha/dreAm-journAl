@@ -5,6 +5,7 @@ import './Sidebar.css'
 const mainNavigation = [
   { icon: '⌂', label: 'Tableau de bord', path: '/' },
   { icon: '☾', label: 'Mes rêves', path: '/reves' },
+  { icon: '⚑', label: 'Quêtes', path: '/quetes' },
   { icon: '◈', label: 'Carte onirique', path: '/carte' },
   { icon: '◌', label: 'Statistiques', path: '/statistiques' },
 ]

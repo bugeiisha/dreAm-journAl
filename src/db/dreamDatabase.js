@@ -1,7 +1,7 @@
 import { openDB } from 'idb'
 
 const DB_NAME = 'oneiric-journal'
-const DB_VERSION = 3
+const DB_VERSION = 4
 
 const dbPromise = openDB(DB_NAME, DB_VERSION, {
   upgrade(db) {
@@ -18,6 +18,13 @@ const dbPromise = openDB(DB_NAME, DB_VERSION, {
       db.createObjectStore('mapPositions', {
         keyPath: 'name',
       })
+    }
+    if (!db.objectStoreNames.contains('quests')) {
+      const store = db.createObjectStore('quests', {
+        keyPath: 'id',
+        autoIncrement: true,
+      })
+      store.createIndex('title', 'title')
     }
   },
 })
@@ -115,5 +122,38 @@ export async function updateCharacter(character) {
 export async function deleteCharacter(id) {
   return dbPromise.then((db) =>
     db.delete('characters', Number(id)),
+  )
+}
+// =========================
+// QUÊTES
+// =========================
+
+export async function getAllQuests() {
+  return dbPromise.then((db) =>
+    db.getAll('quests'),
+  )
+}
+
+export async function getQuest(id) {
+  return dbPromise.then((db) =>
+    db.get('quests', Number(id)),
+  )
+}
+
+export async function addQuest(quest) {
+  return dbPromise.then((db) =>
+    db.add('quests', quest),
+  )
+}
+
+export async function updateQuest(quest) {
+  return dbPromise.then((db) =>
+    db.put('quests', quest),
+  )
+}
+
+export async function deleteQuest(id) {
+  return dbPromise.then((db) =>
+    db.delete('quests', Number(id)),
   )
 }
