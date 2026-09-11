@@ -67,7 +67,7 @@ useEffect(() => {
           <div className="quests-header">
             <h2>Quêtes</h2>
 
-            <button className="add-quest-button" onClick={() => navigate('/quetes/nouvelle')}>
+            <button className="primary-button" onClick={() => navigate('/quetes/nouvelle')}>
                 + Nouvelle quête
             </button>
           </div>

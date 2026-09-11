@@ -209,31 +209,68 @@
   font-size: 0.9rem;
   white-space: nowrap;
 }
+.primary-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 17px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  background:
+    linear-gradient(
+      135deg,
+      #8b6df0,
+      #6748c8
+    );
+  border: none;
+  border-radius: 10px;
+  box-shadow:
+    0 8px 25px rgba(105, 72, 200, 0.25);
+  cursor: pointer;
+}
+
+.primary-button span {
+  font-size: 19px;
+  line-height: 1;
+}
+
 @media (max-width: 768px) {
   .quests-layout {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
   }
   .quests-grid {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    gap: 12px;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  .quest-card h3 {
+    font-size: 0.95rem;
   }
   .quests-right {
-    margin-top: 20px;
+    margin-top: 16px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
   .quests-header {
-    flex-direction: column;
     align-items: stretch;
     gap: 12px;
-  }
-  .add-quest-button {
-    width: 100%;
   }
   .quest-detail-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+    width: 100%;
   }
   .quest-status-badge {
     align-self: flex-start;
+    white-space: normal;
   }
   .quest-preview-actions {
     display: flex;
@@ -246,5 +283,10 @@
   }
   .linked-dream-button {
     min-height: 48px;
+  }
+  .primary-button {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 17px;
   }
 }
