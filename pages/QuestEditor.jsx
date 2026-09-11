@@ -65,6 +65,21 @@ function QuestEditor() {
 
   return (
     <div className="quest-editor">
+      <div className="quest-editor-header">
+  <button
+    type="button"
+    className="back-button"
+    onClick={() => navigate('/quetes')}
+  >
+    ← Retour
+  </button>
+
+  <h1>
+    {isEditing
+      ? 'Modifier la quête'
+      : 'Nouvelle quête'}
+  </h1>
+</div>
       <h1>Nouvelle quête</h1>
 
       <form className="quest-form" onSubmit={handleSubmit}>

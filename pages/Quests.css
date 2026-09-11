@@ -158,20 +158,93 @@
 .linked-dreams {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .linked-dream-button {
-  background: transparent;
-  border: 1px solid #2c2c38;
-  border-radius: 10px;
-
-  padding: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: #e5e7eb;
   text-align: left;
-
   cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+}
+.linked-dream-button:hover {
+  background: rgba(139,92,246,0.15);
+  border-color: #8b5cf6;
+  transform: translateY(-1px);
+}
+.linked-dream-date {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  opacity: 0.65;
+}
+.quest-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.linked-dream-button:hover {
-  border-color: #8b5cf6;
+.quest-detail-header h2 {
+  margin-bottom: 4px;
+}
+
+.quest-id {
+  display: block;
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+.quest-status-badge {
+  padding: 8px 12px;
+  border-radius: 999px;
+
+  background: rgba(255,255,255,0.08);
+
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+@media (max-width: 768px) {
+  .quests-layout {
+    grid-template-columns: 1fr;
+  }
+  .quests-grid {
+    grid-template-columns: 1fr;
+  }
+  .quests-right {
+    margin-top: 20px;
+  }
+  .quests-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .add-quest-button {
+    width: 100%;
+  }
+  .quest-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .quest-status-badge {
+    align-self: flex-start;
+  }
+  .quest-preview-actions {
+    display: flex;
+    gap: 12px;
+  }
+  .quest-edit-button,
+  .quest-delete-button {
+    flex: 1;
+    min-height: 44px;
+  }
+  .linked-dream-button {
+    min-height: 48px;
+  }
 }

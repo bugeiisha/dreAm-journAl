@@ -34,6 +34,13 @@ useEffect(() => {
       ),
     )
   : []
+  const dreamCount = linkedDreams.length
+  const questProgress =
+    dreamCount === 0
+      ? 'never'
+      : selectedQuest?.status === 'success'
+      ? 'success'
+      : 'attempted'
 
     async function handleDelete() {
   if (!selectedQuest) return
@@ -91,10 +98,11 @@ useEffect(() => {
                 <p>{quest.description}</p>
 
                 <div className="quest-footer">
-                  <span>
-                    {quest.linkedDreams?.length || 0}{' '}
-                    rêve(s)
-                  </span>
+                  {quest.status === 'success'
+                    ? '🟢 Réussie'
+                    : quest.status === 'failed'
+                    ? '🔴 Échouée'
+                    : '🟡 À tester'}
                 </div>
               </div>
             ))}
@@ -105,23 +113,31 @@ useEffect(() => {
         <aside className="quests-right">
           {selectedQuest ? (
             <>
-              <h2>{selectedQuest.title}</h2>
+              <div className="quest-detail-header">
+                <div>
+                  <h2>{selectedQuest.title}</h2>
 
-              <p>
-                {selectedQuest.source === 'iktomi'
-                  ? `IK-${selectedQuest.numero}`
-                  : `P-${selectedQuest.numero}`}
-              </p>
-
-              <div className="quest-status">
-                {selectedQuest.status}
+                  <span className="quest-id">
+                    {selectedQuest.source === 'iktomi'
+                      ? `IK-${selectedQuest.numero}`
+                      : `P-${selectedQuest.id}`}
+                  </span>
+                </div>
+                    
+                <div className="quest-status-badge">
+                  {selectedQuest.status === 'success'
+                    ? '🟢 Réussie'
+                    : selectedQuest.status === 'failed'
+                    ? '🔴 Échouée'
+                    : '🟡 À tester'}
+                </div>
               </div>
 
               <h3>Description</h3>
 
               <p>{selectedQuest.description}</p>
 
-              <h3>Rêves liés</h3>
+              <h3>Rêves liés ({linkedDreams.length})</h3>
 
               <div className="linked-dreams">
                   {linkedDreams.length === 0 ? (
@@ -135,7 +151,15 @@ useEffect(() => {
                           navigate(`/reves/${dream.id}`)
                         }
                       >
-                        ☾ {dream.title || 'Rêve sans titre'}
+                        <div>
+                          <strong>
+                            ☾ {dream.title || 'Rêve sans titre'}
+                          </strong>
+                                              
+                          <div className="linked-dream-date">
+                            {dream.date}
+                          </div>
+                        </div>
                       </button>
                     ))
                   )}
