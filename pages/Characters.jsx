@@ -186,7 +186,15 @@ export default function Characters() {
         ),
     )
   : []
+console.log(
+  'PR sélectionné :',
+  selectedCharacter
+)
 
+console.log(
+  'linkedDreams :',
+  linkedDreams
+)
   if (selectedCharacter) {
     return (
       <main className="characters-page">
@@ -451,12 +459,9 @@ export default function Characters() {
 
               <div className="character-list-footer">
                 <span>
-                  {character.dreamIds?.length || 0}{' '}
-                  apparition
-                  {(character.dreamIds?.length || 0) !==
-                  1
-                    ? 's'
-                    : ''}
+                  {dreams.filter((dream) => dream.linkedPRs?.includes(character.id)).length}
+                  {' '}rêve
+                  {dreams.filter((dream) => dream.linkedPRs?.includes(character.id)).length > 1 ? 's' : ''}
                 </span>
 
                 {character.firstAppearanceDate && (
