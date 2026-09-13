@@ -263,27 +263,19 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <div>
-          <span className="page-eyebrow">
-            {formatToday()}
-          </span>
-
-          <h2>Bonjour 🌙</h2>
-
-          <p>
-            Voici ce qui s'est passé dans tes rêves.
-          </p>
+        <div className="dashboard-header-add">
+          <div>
+            <span className="page-eyebrow">{formatToday()}</span>
+            <h2>Bonjour 🌙</h2>
+          </div>
+          <button className="primary-button" onClick={() => navigate('/reves/nouveau')}>
+            <span>+</span>
+              Ajouter un rêve
+          </button>
         </div>
-
-        <button
-          className="primary-button"
-          onClick={() =>
-            navigate('/reves/nouveau')
-          }
-        >
-          <span>+</span>
-          Ajouter un rêve
-        </button>
+        <p>
+          Voici ce qui s'est passé dans tes rêves.
+        </p>
       </header>
 
       <section className="stats-grid">

@@ -7,6 +7,7 @@ function Quests() {
   const navigate = useNavigate()
   const [quests, setQuests] = useState([])
   const [dreams, setDreams] = useState([])
+  const [search, setSearch] = useState('')
 
 useEffect(() => {
   async function loadData() {
@@ -43,37 +44,49 @@ useEffect(() => {
       : 'attempted'
 
     async function handleDelete() {
-  if (!selectedQuest) return
+      if (!selectedQuest) return
 
-  const confirmed = window.confirm(
-    `Supprimer "${selectedQuest.title}" ?`
-  )
-
-  if (!confirmed) return
-
-  await deleteQuest(selectedQuest.id)
-
-  const updatedQuests = await getAllQuests()
-
-  setQuests(updatedQuests)
-  setSelectedQuestId(null)
-}
+      const confirmed = window.confirm(
+        `Supprimer "${selectedQuest.title}" ?`
+      )
+    
+      if (!confirmed) return
+    
+      await deleteQuest(selectedQuest.id)
+    
+      const updatedQuests = await getAllQuests()
+    
+      setQuests(updatedQuests)
+      setSelectedQuestId(null)
+    }
+    const filteredQuests = quests.filter((quest) =>
+      `${quest.title} ${quest.description} ${quest.numero}`
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    )
   return (
     <div className="quests-page">
       <div className="quests-layout">
-
         <div className="quests-left">
-
           <div className="quests-header">
+            <span className="quests-eyebrow">
+              QUÊTES ONIRIQUE
+            </span>
             <h2>Quêtes</h2>
-
-            <button className="primary-button" onClick={() => navigate('/quetes/nouvelle')}>
+            <p>Commence ton aventure onirique et accomplis tes quêtes.</p>
+            <div className="quests-toolbar">
+              <button className="quests-primary-button" onClick={() => navigate('/quetes/nouvelle')}>
                 + Nouvelle quête
-            </button>
+              </button>
+              <input type="text" placeholder="Rechercher une quête..." value={search} onChange={(e) => setSearch(e.target.value)} className="quest-search"/>
+            </div>
           </div>
 
+          <h2 className='quests-grid-h2'>
+            Quêtes ({filteredQuests.length})
+          </h2>
           <div className="quests-grid">
-            {quests.map((quest) => (
+            {filteredQuests.map((quest) => (
               <div
                 key={quest.id}
                 className={`quest-card ${

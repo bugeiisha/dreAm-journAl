@@ -1,7 +1,7 @@
 import { openDB } from 'idb'
 
 const DB_NAME = 'oneiric-journal'
-const DB_VERSION = 4
+const DB_VERSION = 5
 
 const dbPromise = openDB(DB_NAME, DB_VERSION, {
   upgrade(db) {
@@ -10,7 +10,6 @@ const dbPromise = openDB(DB_NAME, DB_VERSION, {
         keyPath: 'id',
         autoIncrement: true,
       })
-
       store.createIndex('date', 'date')
     }
 
@@ -19,6 +18,15 @@ const dbPromise = openDB(DB_NAME, DB_VERSION, {
         keyPath: 'name',
       })
     }
+    
+    if (!db.objectStoreNames.contains('characters')) {
+      const store = db.createObjectStore('characters', {
+        keyPath: 'id',
+        autoIncrement: true,
+      })
+      store.createIndex('name', 'name')
+    }
+
     if (!db.objectStoreNames.contains('quests')) {
       const store = db.createObjectStore('quests', {
         keyPath: 'id',

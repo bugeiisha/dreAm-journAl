@@ -1,16 +1,12 @@
 .dashboard {
   width: 100%;
 }
-
-.dashboard-header {
+.dashboard-header-add{
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 30px;
-
-  margin-bottom: 42px;
 }
-
 .page-eyebrow {
   color: #9276ec;
 
@@ -28,10 +24,8 @@
 }
 
 .dashboard-header p {
-  margin: 0;
-
+  margin-bottom: 20px;
   color: #8e8a9d;
-
   font-size: 14px;
 }
 
@@ -39,27 +33,20 @@
   display: flex;
   align-items: center;
   gap: 8px;
-
   padding: 12px 17px;
-
   color: #ffffff;
-
   font-size: 13px;
   font-weight: 500;
-
   background:
     linear-gradient(
       135deg,
       #8b6df0,
       #6748c8
     );
-
   border: none;
   border-radius: 10px;
-
   box-shadow:
     0 8px 25px rgba(105, 72, 200, 0.25);
-
   cursor: pointer;
 }
 
@@ -242,7 +229,7 @@
   }
 
   .primary-button {
-    width: 100%;
+    width: 50%;
     justify-content: center;
     padding: 14px 17px;
   }
