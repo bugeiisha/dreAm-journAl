@@ -632,11 +632,6 @@
     grid-template-columns: 95px minmax(0, 1fr);
     gap: 12px;
   }
-
-  .character-meta {
-    grid-template-columns: 1fr;
-  }
-
   .character-actions {
     justify-content: stretch;
   }

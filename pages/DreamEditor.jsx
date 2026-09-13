@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, } from 'react-router-dom'
-import { addDream, getAllDreams, getDream, updateDream as updateSavedDream,  getAllQuests } from '../src/db/dreamDatabase'
+import { addDream, getAllDreams, getDream, updateDream as updateSavedDream,  getAllQuests, getAllCharacters } from '../src/db/dreamDatabase'
 
 import './DreamEditor.css'
 
@@ -18,6 +18,7 @@ function createInitialDream() {
     falseAwakening: false,
     nightmare: false,
     characters: [],
+    linkedPRs: [],
     places: [],
     objects: [],
     other: [],
@@ -95,16 +96,23 @@ function DreamEditor() {
     const quests = await getAllQuests()
     setAllQuests(quests)
   }
-
   loadQuests()
 }, [])
-
-
   const [isLoading, setIsLoading] = useState(
     isEditing,
   )
-
   const [isSaving, setIsSaving] = useState(false)
+
+  const [allPRs, setAllPRs] = useState([])
+  const [prInput, setPrInput] = useState('')
+  useEffect(() => {
+  async function loadPRs() {
+    const prs = await getAllCharacters()
+    setAllPRs(prs)
+  }
+
+    loadPRs()
+  }, [])
 
   const [tagInputs, setTagInputs] = useState({
     characters: '',
@@ -214,7 +222,28 @@ function toggleQuest(questId) {
       : [...prev.linkedQuests, questId]
   }))
 }
+/* =========================
+     PR
+  ========================= */
+function addPR(pr) {
+  if (dream.linkedPRs.includes(pr.id)) return
 
+  updateDream('linkedPRs', [
+    ...dream.linkedPRs,
+    pr.id,
+  ])
+
+  setPrInput('')
+}
+
+function removePR(prId) {
+  updateDream(
+    'linkedPRs',
+    dream.linkedPRs.filter(
+      (id) => id !== prId,
+    ),
+  )
+}
   /* =========================
      TAGS
   ========================= */
@@ -345,7 +374,11 @@ function toggleQuest(questId) {
       </div>
     )
   }
-
+const filteredPRs = allPRs.filter((pr) =>
+  pr.name
+    .toLowerCase()
+    .includes(prInput.toLowerCase()),
+)
   return (
     <div className="dream-editor-page">
       <button
@@ -707,6 +740,50 @@ function toggleQuest(questId) {
                 'characters',
               )
             }
+          />
+          <TagCategory
+            title="PR"
+            icon="☾"
+            tags={
+              dream.linkedPRs
+                .map(id =>
+                  allPRs.find(pr => pr.id === id)?.name
+                )
+                .filter(Boolean)
+            }
+            inputValue={prInput}
+            suggestions={allPRs.map(pr => pr.name)}
+            onInputChange={setPrInput}
+            onAdd={() => {}}
+            onSelectSuggestion={(name) => {
+              const pr = allPRs.find(
+                p => p.name === name,
+              )
+            
+              if (!pr) return
+            
+              updateDream('linkedPRs', [
+                ...dream.linkedPRs,
+                pr.id,
+              ])
+            
+              setPrInput('')
+            }}
+            onRemove={(name) => {
+              const pr = allPRs.find(
+                p => p.name === name,
+              )
+            
+              if (!pr) return
+            
+              updateDream(
+                'linkedPRs',
+                dream.linkedPRs.filter(
+                  id => id !== pr.id,
+                ),
+              )
+            }}
+            onKeyDown={() => {}}
           />
 
           <TagCategory

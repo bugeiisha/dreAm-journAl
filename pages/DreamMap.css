@@ -297,6 +297,102 @@
   font-size: 12px;
   line-height: 1.6;
 }
+.mobile-places-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-place-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.mobile-place-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mobile-place-dreams {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-dream-item {
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+}
+.dream-map-header span{
+  margin: 20px 0 14px;
+  color: #6f6b7e;
+  font-size: 12px;
+}
+.mobile-place-search {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  margin-bottom: 16px;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: white;
+}
+.mobile-place-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-place-icon {
+  font-size: 1.8rem;
+}
+
+.mobile-place-info h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.mobile-place-info p {
+  margin: 4px 0 0;
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+.mobile-place-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.place-count-badge {
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  font-weight: 600;
+}
+
+.mobile-place-arrow {
+  opacity: 0.7;
+}
+
+.mobile-place-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
 
 /* =========================
    RESPONSIVE
@@ -305,6 +401,8 @@
 @media (max-width: 900px) {
   .dream-map-layout {
     grid-template-columns: 1fr;
+    gap: 16px;
+    min-height: auto;
   }
 
   .map-sidebar {

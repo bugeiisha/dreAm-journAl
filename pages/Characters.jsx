@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
-import {
-  addCharacter,
-  deleteCharacter,
-  getAllCharacters,
-} from '../src/db/dreamDatabase'
+import { useNavigate } from 'react-router-dom'
+import { addCharacter, deleteCharacter, getAllCharacters, getAllDreams} from '../src/db/dreamDatabase'
 import './Characters.css'
 
 const emptyCharacter = {
@@ -14,6 +11,7 @@ const emptyCharacter = {
   appearance: '',
   notes: '',
   firstAppearanceDate: '',
+  aliases: [],
   dreamIds: [],
   questIds: [],
 }
@@ -35,15 +33,17 @@ function formatDate(date) {
 }
 
 export default function Characters() {
+  const navigate = useNavigate()
   const [characters, setCharacters] = useState([])
   const [showForm, setShowForm] = useState(false)
-  const [selectedCharacter, setSelectedCharacter] =
-    useState(null)
+  const [selectedCharacter, setSelectedCharacter] = useState(null)
   const [form, setForm] = useState(emptyCharacter)
   const [search, setSearch] = useState('')
+  const [dreams, setDreams] = useState([])
 
   useEffect(() => {
     loadCharacters()
+    loadDreams()
   }, [])
 
   async function loadCharacters() {
@@ -57,6 +57,17 @@ export default function Characters() {
       )
     }
   }
+    async function loadDreams() {
+        try {
+          const data = await getAllDreams()
+          setDreams(data)
+        } catch (error) {
+          console.error(
+            'Impossible de charger les rêves :',
+            error,
+          )
+        }
+    }
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -168,6 +179,13 @@ export default function Characters() {
         )
     },
   )
+  const linkedDreams = selectedCharacter
+      ? dreams.filter((dream) =>
+        dream.linkedPRs?.includes(
+            selectedCharacter.id,
+        ),
+    )
+  : []
 
   if (selectedCharacter) {
     return (
@@ -256,27 +274,41 @@ export default function Characters() {
               <div>
                 <span>Apparitions</span>
                 <strong>
-                  {selectedCharacter.dreamIds?.length ||
-                    0}
+                  {linkedDreams.length}
                 </strong>
               </div>
             </div>
 
             <div className="character-future-section">
-              <span>RÊVES ASSOCIÉS</span>
-              <p>
-                Les rêves liés à ce personnage
-                apparaîtront ici.
-              </p>
+                <span>
+                  RÊVES ASSOCIÉS ({linkedDreams.length})
+                </span>             
+                {linkedDreams.length === 0 ? (
+                  <p>Les rêves liés à ce personnage apparaîtront ici.</p>
+                ) : (
+                  <div className="linked-dreams">
+                    {linkedDreams.map((dream) => (
+                      <button
+                        key={dream.id}
+                        className="linked-dream-button"
+                        onClick={() =>
+                          navigate(`/reves/${dream.id}`)
+                        }
+                      >
+                        ☾ {dream.title || 'Rêve sans titre'}
+                      </button>
+                    ))}
+                  </div>
+                )}
             </div>
 
-            <div className="character-future-section">
+            {/*<div className="character-future-section">
               <span>QUÊTES IKＴOMI</span>
               <p>
                 Les quêtes associées à ce personnage
                 apparaîtront ici.
               </p>
-            </div>
+            </div>*/}
 
             <div className="character-actions">
               <button

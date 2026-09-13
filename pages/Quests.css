@@ -98,6 +98,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-top: 20px;
 }
 .quest-back-button,
 .quest-edit-button {
@@ -130,6 +131,7 @@
   height: 36px;
   font-size: 20px;
   border-radius: 10px;
+  border: 1px solid rgba(145, 145, 145, 0.2);
 }
 
 .quest-edit-button:hover {
@@ -176,7 +178,6 @@
   text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 20px;
 }
 .linked-dream-button:hover {
   background: rgba(139,92,246,0.15);
@@ -303,6 +304,7 @@
   .quest-preview-actions {
     display: flex;
     gap: 12px;
+    margin-top: 20px;
   }
   .quest-edit-button,
   .quest-delete-button {

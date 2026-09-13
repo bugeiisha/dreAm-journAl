@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Draggable from 'react-draggable'
 import { getAllDreams, getAllMapPositions, saveMapPosition,} from '../src/db/dreamDatabase'
-
+import { useNavigate } from 'react-router-dom'
 import './DreamMap.css'
 
 function getPlaceCount(dreams) {
@@ -92,6 +92,9 @@ function DreamMap() {
   const [positions, setPositions] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [selectedPlace, setSelectedPlace] = useState(null)
+  const [search, setSearch] = useState('')
+  const navigate = useNavigate()
+  const isMobile = window.innerWidth <= 768
 
   useEffect(() => {
     async function loadMapData() {
@@ -124,10 +127,16 @@ function DreamMap() {
     loadMapData()
   }, [])
 
+  
   const places = useMemo(() => {
     return getPlaceCount(dreams)
   }, [dreams])
-
+  
+  const filteredPlaces = places.filter((place) =>
+  place.name
+    .toLowerCase()
+    .includes(search.trim().toLowerCase())
+)
   const selectedPlaceDreams = useMemo(() => {
     if (!selectedPlace) return []
 
@@ -163,6 +172,90 @@ function DreamMap() {
     }
   }
 
+  /* MOBILE */
+  if (isMobile) {
+  return (
+    <div className="dream-map-page">
+      <header className="dream-map-header">
+        <div>
+          <span className="page-eyebrow">
+            EXPLORATION ONIRIQUE
+          </span>
+
+          <h2>Carte onirique</h2>
+           <span>
+            {places.length} lieu
+            {places.length > 1 ? 'x' : ''}
+          </span>
+        </div>
+        <input
+          className="mobile-place-search"
+          type="text"
+          placeholder="🔍 Rechercher un lieu..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+        />
+      </header>
+
+      <div className="mobile-places-list">
+        {filteredPlaces.map((place) => {
+          const placeDreams = dreams.filter(
+            (dream) =>
+              (dream.places || []).includes(
+                place.name,
+              ),
+          )
+
+          return (
+            <div
+              key={place.name}
+              className="mobile-place-card"
+            >
+              <div className="mobile-place-header" onClick={() => setSelectedPlace( selectedPlace?.name === place.name ? null : place,)}>
+                <div className="mobile-place-info">
+                  <span className="mobile-place-icon">
+                    ⌂
+                  </span>
+                  <div>
+                    <h3>{place.name}</h3>
+              
+                    <p>
+                      {place.count} apparition
+                      {place.count > 1 ? 's' : ''}
+                    </p>
+                  </div>
+                </div>
+              
+                <div className="mobile-place-right">
+                  <span className="mobile-place-arrow">
+                    {selectedPlace?.name === place.name
+                      ? '▲'
+                      : '▼'}
+                  </span>
+                </div>
+              </div>
+
+              {selectedPlace?.name ===
+                place.name && (
+                <div className="mobile-place-dreams">
+                  {placeDreams.map((dream) => (
+                    <div key={dream.id} className="mobile-dream-item" onClick={() => navigate(`/reves/${dream.id}`)}>
+                      ☾{' '}
+                      {dream.title ||
+                        'Rêve sans titre'}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
   return (
     <div className="dream-map-page">
       <header className="dream-map-header">
