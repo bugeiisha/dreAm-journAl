@@ -22,6 +22,7 @@ function createInitialDream() {
     places: [],
     objects: [],
     other: [],
+    techniques: [],
     linkedQuests: [],
     notes: '',
     image: null,
@@ -39,6 +40,7 @@ function getTagLibrary(dreams) {
     'places',
     'objects',
     'other',
+    'techniques',
   ]
 
   const library = {
@@ -46,6 +48,7 @@ function getTagLibrary(dreams) {
     places: [],
     objects: [],
     other: [],
+    techniques: [],
   }
 
   categories.forEach((category) => {
@@ -119,6 +122,7 @@ function DreamEditor() {
     places: '',
     objects: '',
     other: '',
+    techniques: '',
   })
 
   const [tagLibrary, setTagLibrary] = useState({
@@ -126,6 +130,7 @@ function DreamEditor() {
     places: [],
     objects: [],
     other: [],
+    techniques: [],
   })
 
   /* =========================
@@ -867,6 +872,32 @@ const filteredPRs = allPRs.filter((pr) =>
               handleTagKeyDown(
                 event,
                 'other',
+              )
+            }
+          />
+          <TagCategory
+            title="Techniques"
+            icon="✦"
+            tags={dream.techniques || []}
+            inputValue={tagInputs.techniques}
+            suggestions={tagLibrary.techniques}
+            onInputChange={(value) =>
+              setTagInputs((current) => ({
+                ...current,
+                techniques: value,
+              }))
+            }
+            onAdd={() => addTag('techniques')}
+            onSelectSuggestion={(tag) =>
+              addTag('techniques', tag)
+            }
+            onRemove={(tag) =>
+              removeTag('techniques', tag)
+            }
+            onKeyDown={(event) =>
+              handleTagKeyDown(
+                event,
+                'techniques',
               )
             }
           />

@@ -108,6 +108,15 @@ function Stats() {
       ),
     [dreams],
   )
+  const topTechniques = useMemo(
+  () =>
+    getMostFrequentTags(
+      dreams,
+      'techniques',
+      5,
+    ),
+  [dreams],
+)
 
   const weekdayActivity = useMemo(
     () => getWeekdayActivity(dreams),
@@ -521,6 +530,10 @@ function Stats() {
           <TagStatsCard
             title="◇ Objets les plus fréquents"
             tags={topObjects}
+          />
+          <TagStatsCard
+            title="✦ Techniques les plus utilisées"
+            tags={topTechniques}
           />
         </div>
       </section>
