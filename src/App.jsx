@@ -9,6 +9,7 @@ import Settings from '../pages/Settings'
 import Quests from '../pages/Quests'
 import QuestEditor from '../pages/QuestEditor'
 import Characters from '../pages/Characters'
+import Notes from '../pages/Notes'
 
 function PlaceholderPage({ title }) {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/places" element={<PlaceholderPage title="Places" />}/>
           <Route path="/objects" element={<PlaceholderPage title="Objects" />}/>
           <Route path="/other" element={<PlaceholderPage title="Other" />}/>
+          <Route path="/notes" element={<Notes />} />
           <Route path="/parametres" element={<Settings />}/>
           <Route path="/statistiques" element={<Stats />}/>
         </Routes>

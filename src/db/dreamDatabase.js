@@ -1,7 +1,7 @@
 import { openDB } from 'idb'
 
 const DB_NAME = 'oneiric-journal'
-const DB_VERSION = 5
+const DB_VERSION = 6
 
 const dbPromise = openDB(DB_NAME, DB_VERSION, {
   upgrade(db) {
@@ -33,6 +33,15 @@ const dbPromise = openDB(DB_NAME, DB_VERSION, {
         autoIncrement: true,
       })
       store.createIndex('title', 'title')
+    }
+    if (!db.objectStoreNames.contains('notes')) {
+      const store = db.createObjectStore('notes', {
+        keyPath: 'id',
+        autoIncrement: true,
+      })
+    
+      store.createIndex('updatedAt', 'updatedAt')
+      store.createIndex('category', 'category')
     }
   },
 })
@@ -163,5 +172,39 @@ export async function updateQuest(quest) {
 export async function deleteQuest(id) {
   return dbPromise.then((db) =>
     db.delete('quests', Number(id)),
+  )
+}
+
+// =========================
+// NOTES
+// =========================
+
+export async function getAllNotes() {
+  return dbPromise.then((db) =>
+    db.getAllFromIndex('notes', 'updatedAt'),
+  )
+}
+
+export async function getNote(id) {
+  return dbPromise.then((db) =>
+    db.get('notes', Number(id)),
+  )
+}
+
+export async function addNote(note) {
+  return dbPromise.then((db) =>
+    db.add('notes', note),
+  )
+}
+
+export async function updateNote(note) {
+  return dbPromise.then((db) =>
+    db.put('notes', note),
+  )
+}
+
+export async function deleteNote(id) {
+  return dbPromise.then((db) =>
+    db.delete('notes', Number(id)),
   )
 }

@@ -15,6 +15,7 @@ const tagsNavigation = [
   { icon: '◈', label: 'Places', path: '/places' },
   { icon: '◇', label: 'Objects', path: '/objects' },
   { icon: '✦', label: 'Other', path: '/other' },
+  { icon: '▤', label: 'Notes', path: '/notes' },
 ]
 
 function Sidebar() {

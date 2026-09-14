@@ -223,16 +223,9 @@
   color: #ffffff;
   font-size: 13px;
   font-weight: 500;
-  background:
-    linear-gradient(
-      135deg,
-      #8b6df0,
-      #6748c8
-    );
-  border: none;
+  background: rgba(126, 93, 229, 0.18);
+  border: 1px solid rgba(154, 121, 255, 0.3);
   border-radius: 10px;
-  box-shadow:
-    0 8px 25px rgba(105, 72, 200, 0.25);
   cursor: pointer;
 }
 
