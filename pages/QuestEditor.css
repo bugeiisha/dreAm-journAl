@@ -1,19 +1,22 @@
 .quest-editor {
   max-width: 900px;
   margin: 0 auto;
-  padding: 24px;
 }
 
 .quest-editor h1 {
   margin-bottom: 24px;
 }
-
+.page-eyebrow {
+  color: #9276ec;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+}
 .quest-form {
   background: #1c1c24;
   border: 1px solid #2c2c38;
   border-radius: 20px;
   padding: 24px;
-
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -69,15 +72,21 @@
 }
 .quest-editor-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
   gap: 16px;
   margin-bottom: 24px;
 }
 
 .back-button {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 10px;
-  padding: 8px 12px;
+  padding: 0;
+  color: #908a9f;
+  font-size: 12px;
+  background: none;
+  border: none;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+.back-button:hover {
+  color: #c7b6ff;
 }

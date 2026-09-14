@@ -65,22 +65,34 @@ function QuestEditor() {
 
   return (
     <div className="quest-editor">
-      <div className="quest-editor-header">
-  <button
-    type="button"
-    className="back-button"
-    onClick={() => navigate('/quetes')}
-  >
-    ← Retour
-  </button>
+        <button
+          type="button"
+          className="back-button"
+          onClick={() => navigate('/quetes')}
+        >
+          ← Retour aux quêtes
+        </button>
+        <header className="editor-header">
+        <div>
+          <span className="page-eyebrow">
+            {isEditing
+              ? 'MODIFICATION'
+              : 'NOUVELLE QUÊTE'}
+          </span>
 
-  <h1>
-    {isEditing
-      ? 'Modifier la quête'
-      : 'Nouvelle quête'}
-  </h1>
-</div>
-      <h1>Nouvelle quête</h1>
+          <h2>
+            {isEditing
+              ? 'Modifier la quête'
+              : 'Ajouter une quête'}
+          </h2>
+
+          <p>
+            {isEditing
+              ? 'Modifie les détails de tes quêtes onirique'
+              : 'Garde une trace de tes exploits avant que les détails ne disparaissent.'}
+          </p>
+        </div>
+      </header>
 
       <form className="quest-form" onSubmit={handleSubmit}>
         <label>Type</label>
