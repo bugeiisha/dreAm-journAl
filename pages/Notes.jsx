@@ -53,6 +53,8 @@ export default function Notes() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const [mobilePreview, setMobilePreview] = useState(false)
+
   // =========================
   // CHARGEMENT
   // =========================
@@ -283,6 +285,13 @@ export default function Notes() {
           <span>＋</span>
           Nouvelle note
         </button>
+        <button
+          className="notes-add-button"
+          id='notes-add-btn'
+          onClick={openNewNote}
+        >
+          <span>＋</span>
+        </button>
       </header>
 
       {/* =========================
@@ -399,9 +408,10 @@ export default function Notes() {
                       ? 'selected'
                       : ''
                   }`}
-                  onClick={() =>
+                  onClick={() => {
                     setSelectedNote(note)
-                  }
+                    setMobilePreview(true)
+                  }}
                 >
                   <div className="note-card-top">
                     <span className="note-category">
@@ -436,8 +446,10 @@ export default function Notes() {
 
         {/* APERÇU */}
 
-        <section className="notes-preview-panel">
-          {!selectedNote ? (
+        <section className={`notes-preview-panel ${
+            mobilePreview ? 'mobile-preview-open' : ''
+        }`}>
+        {!selectedNote ? (
             <div className="notes-preview-empty">
               <div className="notes-preview-icon">
                 ✦
@@ -451,6 +463,10 @@ export default function Notes() {
               </p>
             </div>
           ) : (
+            <>
+            <button className="mobile-note-back" onClick={() => setMobilePreview(false)}>
+                ← Retour aux notes
+            </button>
             <article className="note-preview">
               <div className="note-preview-header">
                 <div>
@@ -522,6 +538,7 @@ export default function Notes() {
                 )}
               </div>
             </article>
+            </>
           )}
         </section>
       </div>

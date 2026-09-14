@@ -631,7 +631,55 @@
     min-height: 180px;
   }
 }
+.mobile-note-back {
+  display: none;
+}
+#notes-add-btn{
+    display: none;
+}
+/* =========================
+   MOBILE — LECTURE D'UNE NOTE
+   ========================= */
 
+@media (max-width: 768px) {
+  .notes-preview-panel {
+    display: none;
+  }
+  .notes-preview-panel.mobile-preview-open {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    padding: 20px;
+    overflow-y: auto;
+    background: #0d0918;
+  }
+  .mobile-note-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    border: none;
+    background: transparent;
+    color: #b9a4ff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .mobile-note-back:active {
+    opacity: 0.7;
+  }
+  .notes-preview-panel.mobile-preview-open .note-preview {
+    min-height: auto;
+  }
+  #notes-add-btn{
+    display: flex;
+  }
+  .notes-add-button{
+    display: none;
+  }
+}
 @media (max-width: 480px) {
   .notes-header {
     gap: 10px;
@@ -644,6 +692,9 @@
   }
   .note-preview {
     padding: 20px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 15px;
   }
   .note-preview h2 {
     font-size: 21px;
