@@ -4,11 +4,16 @@ export async function exportDreams() {
   const dreams = await getAllDreams()
 
   const backup = {
-    app: 'Oneiric Journal',
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    dreams,
-  }
+  app: 'Oneiric Journal',
+  version: 2,
+  exportedAt: new Date().toISOString(),
+
+  dreams,
+  quests,
+  characters,
+  notes,
+  mapPositions,
+}
 
   const json = JSON.stringify(
     backup,

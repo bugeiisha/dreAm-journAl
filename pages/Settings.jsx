@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { addDreams, getAllDreams } from '../src/db/dreamDatabase'
+import { addDreams, getAllDreams, getAllQuests, getAllCharacters, getAllNotes, addQuest, addCharacter, addNote, saveMapPosition, } from '../src/db/dreamDatabase'
 import { parseLucidityDreams } from '../src/utils/lucidityImport'
 import { exportDreams } from '../src/utils/dataExport'
 import './Settings.css'
@@ -134,7 +134,77 @@ function Settings() {
         return
       }
 
-      await addDreams(dreams)
+      const existingDreams = await getAllDreams()
+      const existingQuests = await getAllQuests()
+      const existingCharacters =
+        await getAllCharacters()
+      const existingNotes =
+        await getAllNotes()
+
+      const dreamsToImport =
+        (backup.dreams || []).filter(
+          (importedDream) =>
+            !existingDreams.some(
+              (dream) =>
+                dream.title ===
+                  importedDream.title &&
+                dream.date === importedDream.date &&
+                dream.content ===
+                  importedDream.content,
+            ),
+        )
+      
+      await addDreams(dreamsToImport)
+      
+      for (const quest of backup.quests || []) {
+        const exists = existingQuests.some(
+          (q) => q.id === quest.id,
+        )
+      
+        if (!exists) {
+          await addQuest(quest)
+        }
+      }
+
+      for (const character of backup.characters || []) {
+        const exists = existingCharacters.some(
+          (c) => c.id === character.id,
+        )
+      
+        if (!exists) {
+          await addCharacter(character)
+        }
+      }
+
+      for (const note of backup.notes || []) {
+        const exists = existingNotes.some(
+          (n) => n.id === note.id,
+        )
+      
+        if (!exists) {
+          await addNote(note)
+        }
+      }
+
+      for (const position of backup.mapPositions || []) {
+        await saveMapPosition(position)
+      }
+
+      const duplicateDreams =
+        (backup.dreams?.length || 0) -
+        dreamsToImport.length
+
+      setImportMessage(
+        `✓ Sauvegarde restaurée.
+      
+      ${dreamsToImport.length} rêve(s) importé(s).
+      
+      ${
+        duplicateDreams > 0
+          ? `${duplicateDreams} doublon(s) ignoré(s).`
+          : 'Aucun doublon détecté.'
+      }`
+      )
 
       setImportMessage(
         `✓ ${dreams.length} rêve${
