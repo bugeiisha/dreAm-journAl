@@ -3,10 +3,10 @@ import './DreamCard.css'
 function DreamCard({ dream }) {
   return (
     <article className="dream-card">
-      {dream.image ? (
+      {dream.image.data ? (
         <div
           className="dream-image"
-          style={{ backgroundImage: `url(${dream.image})` }}
+          style={{ backgroundImage: `url(${dream.image.data})` }}
         />
       ) : (
         <div className="dream-image dream-image-placeholder">

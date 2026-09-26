@@ -510,14 +510,11 @@ function Dreams() {
                   </div>
                 </div>
 
-                {selectedDream.image && (
+                {selectedDream.image?.data && (
                   <div className="dream-preview-image">
                     <img
-                      src={selectedDream.image}
-                      alt={
-                        selectedDream.title ||
-                        'Illustration du rêve'
-                      }
+                      src={selectedDream.image.data}
+                      alt="Illustration du rêve"
                     />
                   </div>
                 )}

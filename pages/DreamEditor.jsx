@@ -322,19 +322,29 @@ function removePR(prId) {
   ========================= */
 
   const handleImage = (event) => {
-    const file = event.target.files?.[0]
+  const file = event.target.files?.[0]
 
-    if (!file) return
+  if (!file) return
 
+  const reader = new FileReader()
+
+  reader.onload = () => {
     updateDream('image', {
       name: file.name,
       type: file.type,
-      file,
+      data: reader.result,
     })
   }
 
+  reader.readAsDataURL(file)
+}
+
   const removeImage = () => {
+     console.log('AVANT', dream.image)
     updateDream('image', null)
+    setTimeout(() => {
+    console.log('APRÈS')
+  }, 100)
   }
 
   /* =========================
@@ -908,7 +918,7 @@ const filteredPRs = allPRs.filter((pr) =>
         
         <div className="form-section">
           <h3>⚑ Quêtes liées</h3>
-                
+
           <div className="quest-selector">
             {allQuests.length === 0 ? (
               <p>Aucune quête créée.</p>
@@ -930,7 +940,7 @@ const filteredPRs = allPRs.filter((pr) =>
                         toggleQuest(quest.id)
                       }
                     />
-        
+
                     <span>
                       {quest.source === 'iktomi'
                         ? `IK-${quest.numero}`
@@ -989,7 +999,7 @@ const filteredPRs = allPRs.filter((pr) =>
             </div>
           </div>
 
-          {dream.image ? (
+          {dream.image?.data ? (
             <ImagePreview
               image={dream.image}
               onRemove={removeImage}
@@ -1233,32 +1243,12 @@ function ImagePreview({
   image,
   onRemove,
 }) {
-  const [imageUrl, setImageUrl] =
-    useState(null)
-
-  useEffect(() => {
-    if (!image?.file) {
-      setImageUrl(null)
-      return undefined
-    }
-
-    const url = URL.createObjectURL(
-      image.file,
-    )
-
-    setImageUrl(url)
-
-    return () => {
-      URL.revokeObjectURL(url)
-    }
-  }, [image])
-
-  if (!imageUrl) return null
+  if (!image?.data) return null
 
   return (
     <div className="image-preview">
       <img
-        src={imageUrl}
+        src={image.data}
         alt="Illustration du rêve"
       />
 
