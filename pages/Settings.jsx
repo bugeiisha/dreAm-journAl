@@ -54,7 +54,7 @@ function Settings() {
 
       const existingDreams = await getAllDreams()
 
-      const dreamsToImport = dreams.filter(
+      const dreamsToImport = importedDreams.filter(
         (importedDream) =>
           !existingDreams.some(
             (dream) =>
@@ -67,7 +67,7 @@ function Settings() {
       await addDreams(dreamsToImport)
 
       const duplicates =
-        dreams.length - dreamsToImport.length
+        importedDreams.length - dreamsToImport.length
 
       setImportMessage(
         `✓ ${dreamsToImport.length} rêve${
@@ -141,20 +141,21 @@ function Settings() {
       const existingNotes =
         await getAllNotes()
 
-      const dreamsToImport =
-        (backup.dreams || []).filter(
-          (importedDream) =>
-            !existingDreams.some(
-              (dream) =>
-                dream.title ===
-                  importedDream.title &&
-                dream.date === importedDream.date &&
-                dream.content ===
-                  importedDream.content,
-            ),
-        )
+      const dreamsToImport = dreams.filter(
+        (importedDream) =>
+          !existingDreams.some(
+            (dream) =>
+              dream.title === importedDream.title &&
+              dream.date === importedDream.date &&
+              dream.content === importedDream.content,
+          ),
+      )
       
-      await addDreams(dreamsToImport)
+      const cleanedDreams = dreamsToImport.map(
+        ({ id, ...dream }) => dream,
+      )
+
+      await addDreams(cleanedDreams)
       
       for (const quest of backup.quests || []) {
         const exists = existingQuests.some(
@@ -204,14 +205,6 @@ function Settings() {
           ? `${duplicateDreams} doublon(s) ignoré(s).`
           : 'Aucun doublon détecté.'
       }`
-      )
-
-      setImportMessage(
-        `✓ ${dreams.length} rêve${
-          dreams.length > 1 ? 's' : ''
-        } restauré${
-          dreams.length > 1 ? 's' : ''
-        } avec succès.`,
       )
     } catch (error) {
       console.error(
