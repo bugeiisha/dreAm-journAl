@@ -913,33 +913,34 @@ const filteredPRs = allPRs.filter((pr) =>
             {allQuests.length === 0 ? (
               <p>Aucune quête créée.</p>
             ) : (
-              allQuests.map((quest) => (
-                <label
-                  key={quest.id}
-                  className="quest-checkbox"
-                >
-                  <input
-                    type="checkbox"
-                    checked={
-                      dream.linkedQuests?.includes(
-                        quest.id,
-                      ) || false
-                    }
-                    onChange={() =>
-                      toggleQuest(quest.id)
-                    }
-                  />
+              <div className="quest-selector-scroll">
+                {allQuests.map((quest) => (
+                  <label
+                    key={quest.id}
+                    className="quest-checkbox"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={
+                        dream.linkedQuests?.includes(
+                          quest.id,
+                        ) || false
+                      }
+                      onChange={() =>
+                        toggleQuest(quest.id)
+                      }
+                    />
         
-                  <span>
-                    {quest.source === 'iktomi'
-                      ? `IK-${quest.numero}`
-                      : `P-${quest.id}`}
-        
-                    {' - '}
-                    {quest.title}
-                  </span>
-                </label>
-              ))
+                    <span>
+                      {quest.source === 'iktomi'
+                        ? `IK-${quest.numero}`
+                        : `P-${quest.id}`}
+                      {' - '}
+                      {quest.title}
+                    </span>
+                  </label>
+                ))}
+              </div>
             )}
           </div>
         </div>
