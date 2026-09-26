@@ -1,18 +1,22 @@
 import './DreamCard.css'
 
 function DreamCard({ dream }) {
+  console.log("DreamCard image =", dream.image)
+
   return (
     <article className="dream-card">
-      {dream.image.data ? (
-        <div
-          className="dream-image"
-          style={{ backgroundImage: `url(${dream.image.data})` }}
-        />
-      ) : (
-        <div className="dream-image dream-image-placeholder">
-          <span>☾</span>
-        </div>
-      )}
+      {dream.image?.data ? (
+  <div
+    className="dream-image"
+    style={{
+      backgroundImage: `url(${dream.image.data})`,
+    }}
+  />
+) : (
+  <div className="dream-image dream-image-placeholder">
+    <span>☾</span>
+  </div>
+)}
 
       <div className="dream-card-content">
         <div className="dream-card-header">
