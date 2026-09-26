@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { addDreams } from '../src/db/dreamDatabase'
+import { addDreams, getAllDreams } from '../src/db/dreamDatabase'
 import { parseLucidityDreams } from '../src/utils/lucidityImport'
 import { exportDreams } from '../src/utils/dataExport'
 import './Settings.css'
@@ -52,14 +52,37 @@ function Settings() {
         return
       }
 
-      await addDreams(importedDreams)
+      const existingDreams = await getAllDreams()
+
+      const dreamsToImport = dreams.filter(
+        (importedDream) =>
+          !existingDreams.some(
+            (dream) =>
+              dream.title === importedDream.title &&
+              dream.date === importedDream.date &&
+              dream.content === importedDream.content,
+          ),
+      )
+
+      await addDreams(dreamsToImport)
+
+      const duplicates =
+        dreams.length - dreamsToImport.length
 
       setImportMessage(
-        `✓ ${importedDreams.length} rêve${
-          importedDreams.length > 1 ? 's' : ''
+        `✓ ${dreamsToImport.length} rêve${
+          dreamsToImport.length > 1 ? 's' : ''
         } importé${
-          importedDreams.length > 1 ? 's' : ''
-        } avec succès.`,
+          dreamsToImport.length > 1 ? 's' : ''
+        } avec succès.${
+          duplicates > 0
+            ? ` (${duplicates} doublon${
+                duplicates > 1 ? 's' : ''
+              } ignoré${
+                duplicates > 1 ? 's' : ''
+              })`
+            : ''
+        }`,
       )
     } catch (error) {
       console.error(

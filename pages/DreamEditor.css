@@ -6,15 +6,11 @@
 
 .back-button {
   padding: 0;
-
   color: #908a9f;
   font-size: 12px;
-
   background: none;
   border: none;
-
   cursor: pointer;
-
   transition: color 0.2s ease;
 }
 
@@ -28,7 +24,6 @@
 
 .editor-header h2 {
   margin: 9px 0 7px;
-
   font-size: 38px;
   font-weight: 600;
   letter-spacing: -1.4px;
@@ -36,9 +31,7 @@
 
 .editor-header p {
   margin: 0;
-
   color: #8e8a9d;
-
   font-size: 14px;
 }
 
@@ -54,9 +47,7 @@
 
 .form-section {
   padding: 24px;
-
   background: rgba(255, 255, 255, 0.025);
-
   border: 1px solid rgba(255, 255, 255, 0.055);
   border-radius: 18px;
 }
