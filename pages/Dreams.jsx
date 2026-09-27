@@ -225,7 +225,6 @@ const hasDreamElements =
 
 const hasQuests =
   selectedDream?.linkedQuests?.length > 0
-
   return (
     <div className="dreams-page">
       <div className="dreams-main-layout">
