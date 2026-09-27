@@ -44,11 +44,8 @@
   border: 1px solid #2c2c38;
   border-radius: 18px;
   padding: 18px;
-  min-height: 220px;
-
   display: flex;
   flex-direction: column;
-
   cursor: pointer;
   transition: 0.2s;
 }
