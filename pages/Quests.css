@@ -5,6 +5,7 @@
   height: calc(100vh - 350px);
   overflow-y: auto;
   padding-right: 6px;
+  align-content: start;
 }
 .quests-grid::-webkit-scrollbar {
   width: 5px;
