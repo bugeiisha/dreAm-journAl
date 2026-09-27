@@ -805,8 +805,10 @@
     display: none;
   }
 
-  .dream-preview-grid {
-    grid-template-columns: 1fr;
+  .dream-preview-grid,
+  .dream-preview-grid.has-quests,
+  .dream-preview-grid.no-quests {
+    grid-template-columns: 1fr !important;
   }
 
   .dream-preview-heading h2 {
