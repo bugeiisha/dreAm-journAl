@@ -44,7 +44,7 @@ function QuestEditor({ onClose }) {
         createdAt: new Date().toISOString(),
       })
     }
-    
+
     if (onClose) {
       onClose()
     } else {
@@ -157,16 +157,12 @@ function QuestEditor({ onClose }) {
             setStatus(e.target.value)
           }
         >
-          <option value="todo">
+          <option value="pending">
             À tester
           </option>
-
+                  
           <option value="success">
             Réussie
-          </option>
-
-          <option value="failed">
-            Échouée
           </option>
         </select>
 

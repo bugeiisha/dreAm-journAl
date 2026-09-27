@@ -39,11 +39,11 @@ useEffect(() => {
   : []
   const dreamCount = linkedDreams.length
   const questProgress =
-    dreamCount === 0
-      ? 'never'
-      : selectedQuest?.status === 'success'
-      ? 'success'
-      : 'attempted'
+  selectedQuest?.status === 'success'
+    ? 'success'
+    : dreamCount > 0
+    ? 'attempted'
+    : 'pending'
 
     async function handleDelete() {
       if (!selectedQuest) return
@@ -93,20 +93,30 @@ useEffect(() => {
             Quêtes ({filteredQuests.length})
           </h2>
           <div className="quests-grid">
-            {filteredQuests.map((quest) => (
-              <div
-                key={quest.id}
-                className={`quest-card ${
-                  quest.status
-                } ${
-                  selectedQuestId === quest.id
-                    ? 'selected'
-                    : ''
-                }`}
-                onClick={() =>
-                  setSelectedQuestId(quest.id)
-                }
-              >
+            {filteredQuests.map((quest) => {
+              const linkedDreamCount = dreams.filter((dream) =>
+                dream.linkedQuests?.includes(quest.id)
+              ).length
+            
+              const progress =
+                quest.status === 'success'
+                  ? 'success'
+                  : linkedDreamCount > 0
+                  ? 'attempted'
+                  : 'pending'
+            
+              return (
+                <div
+                  key={quest.id}
+                  className={`quest-card ${
+                    selectedQuestId === quest.id
+                      ? 'selected'
+                      : ''
+                  }`}
+                  onClick={() =>
+                    setSelectedQuestId(quest.id)
+                  }
+                >
                 <div className="quest-number">
                   {quest.source === 'iktomi'
                     ? `IK-${quest.numero}`
@@ -118,14 +128,14 @@ useEffect(() => {
                 <p>{quest.description}</p>
 
                 <div className="quest-footer">
-                  {quest.status === 'success'
+                  {progress === 'success'
                     ? '🟢 Réussie'
-                    : quest.status === 'failed'
-                    ? '🔴 Échouée'
+                    : progress === 'attempted'
+                    ? '🟣 Tentée'
                     : '🟡 À tester'}
                 </div>
               </div>
-            ))}
+            )})}
           </div>
 
         </div>
@@ -145,10 +155,10 @@ useEffect(() => {
                 </div>
                     
                 <div className="quest-status-badge">
-                  {selectedQuest.status === 'success'
+                  {questProgress === 'success'
                     ? '🟢 Réussie'
-                    : selectedQuest.status === 'failed'
-                    ? '🔴 Échouée'
+                    : questProgress === 'attempted'
+                    ? '🟣 Tentée'
                     : '🟡 À tester'}
                 </div>
               </div>
