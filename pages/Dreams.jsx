@@ -217,14 +217,14 @@ function Dreams() {
   }, [filteredDreams, selectedDreamId])
 
 const hasDreamElements =
-  selectedDream.characters?.length > 0 ||
-  selectedDream.places?.length > 0 ||
-  selectedDream.objects?.length > 0 ||
-  selectedDream.techniques?.length > 0 ||
-  selectedDream.other?.length > 0
+  selectedDream?.characters?.length > 0 ||
+  selectedDream?.places?.length > 0 ||
+  selectedDream?.objects?.length > 0 ||
+  selectedDream?.techniques?.length > 0 ||
+  selectedDream?.other?.length > 0
 
 const hasQuests =
-  selectedDream.linkedQuests?.length > 0
+  selectedDream?.linkedQuests?.length > 0
 
   return (
     <div className="dreams-page">
