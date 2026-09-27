@@ -805,7 +805,6 @@
     display: none;
   }
 
-  .dream-preview-grid,
   .dream-preview-grid.has-quests,
   .dream-preview-grid.no-quests {
     grid-template-columns: 1fr !important;
