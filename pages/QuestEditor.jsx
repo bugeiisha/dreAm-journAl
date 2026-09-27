@@ -5,7 +5,7 @@ import './QuestEditor.css'
 import { useParams } from 'react-router-dom'
 import { getQuest, updateQuest } from '../src/db/dreamDatabase'
 
-function QuestEditor() {
+function QuestEditor({ onClose }) {
   const navigate = useNavigate()
   const { questId } = useParams()
   const isEditing = Boolean(questId)
@@ -65,20 +65,18 @@ function QuestEditor() {
 
   return (
     <div className="quest-editor">
-        <button
-          type="button"
-          className="back-button"
-          onClick={() => navigate('/quetes')}
-        >
-          ← Retour aux quêtes
-        </button>
         <header className="editor-header">
         <div>
-          <span className="page-eyebrow">
-            {isEditing
-              ? 'MODIFICATION'
-              : 'NOUVELLE QUÊTE'}
-          </span>
+          <div className="quest-form-header">
+            <span className="page-eyebrow">
+              {isEditing
+                ? 'MODIFICATION'
+                : 'NOUVELLE QUÊTE'}
+            </span>
+            <button type="button" className="close-button" onClick={onClose}>
+              ✕
+            </button>
+          </div>
 
           <h2>
             {isEditing

@@ -287,8 +287,8 @@
   -webkit-line-clamp: 1;
 }
 .dream-badge.lucid {
-  color: #c5b5ff;
-  background: rgba(145, 112, 238, 0.12);
+  color: #89ffa3;
+  background: rgba(72, 230, 106, 0.12);
 }
 .dream-badge.recurring {
   color: #7bc9f5;
@@ -304,9 +304,7 @@
 }
 .dream-badge {
   padding: 3px 7px;
-  color: #c5b5ff;
   font-size: 9px;
-  background: rgba(145, 112, 238, 0.12);
   border-radius: 10px;
 }
 .dream-badge.nightmare {
@@ -577,10 +575,9 @@
 
 /* Lucide */
 .detail-badge.lucid {
-  color: #c5b5ff;
-  background: rgba(145, 112, 238, 0.12);
+  color: #89ffa3;
+  background: rgba(72, 230, 106, 0.12);
 }
-
 /* Récurrent */
 .detail-badge.recurring {
   color: #7bc9f5;
@@ -613,26 +610,25 @@
 }
 .dream-preview-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-bottom: 10px;
+}
+.dream-preview-grid.has-quests {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.dream-preview-grid.no-quests {
+  grid-template-columns: 1fr 1fr;
 }
 
 .preview-details-card,
 .preview-tags-card,
+.preview-quests-card,
 .preview-notes-card {
   padding: 16px;
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 14px;
-}
-
-.preview-details-card h3,
-.preview-tags-card h3 {
-  margin: 0 0 14px;
-  color: #e2ddeb;
-  font-size: 13px;
-  font-weight: 500;
 }
 
 .preview-detail-row {
@@ -644,12 +640,12 @@
 
 .preview-detail-row span {
   color: #7f7a8b;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .preview-detail-row strong {
   color: #c8c2d1;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
 }
 

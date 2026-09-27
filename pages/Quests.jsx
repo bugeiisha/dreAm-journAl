@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getAllQuests, getAllDreams, deleteQuest } from '../src/db/dreamDatabase'
 import './Quests.css'
+import QuestEditor from './QuestEditor'
 
 function Quests() {
   const navigate = useNavigate()
   const [quests, setQuests] = useState([])
   const [dreams, setDreams] = useState([])
   const [search, setSearch] = useState('')
+  const [showQuestEditor, setShowQuestEditor] = useState(false)
 
 useEffect(() => {
   async function loadData() {
@@ -75,10 +77,15 @@ useEffect(() => {
             <h2>Quêtes</h2>
             <p>Commence ton aventure onirique et accomplis tes quêtes.</p>
             <div className="quests-toolbar">
-              <button className="quests-primary-button" onClick={() => navigate('/quetes/nouvelle')}>
+              <input type="text" placeholder="Rechercher une quête..." value={search} onChange={(e) => setSearch(e.target.value)} className="quest-search"/>
+              <button
+                className="quests-primary-button"
+                onClick={() =>
+                  setShowQuestEditor(true)
+                }
+              >
                 + Nouvelle quête
               </button>
-              <input type="text" placeholder="Rechercher une quête..." value={search} onChange={(e) => setSearch(e.target.value)} className="quest-search"/>
             </div>
           </div>
 
@@ -210,7 +217,25 @@ useEffect(() => {
             </div>
           )}
         </aside>
-
+          {showQuestEditor && (
+            <div
+              className="notes-form-overlay"
+              onClick={() =>
+                setShowQuestEditor(false)
+              }
+            >
+              <div
+                className="notes-form"
+                onClick={(e) =>
+                  e.stopPropagation()
+                }
+              >
+                <QuestEditor onClose={() =>
+                    setShowQuestEditor(false)
+                  } />
+              </div>
+            </div>
+          )}
       </div>
     </div>
   )

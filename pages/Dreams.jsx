@@ -216,6 +216,14 @@ function Dreams() {
     }
   }, [filteredDreams, selectedDreamId])
 
+  const hasDreamElements = selectedDream && (
+  selectedDream.characters?.length > 0 ||
+  selectedDream.places?.length > 0 ||
+  selectedDream.objects?.length > 0 ||
+  selectedDream.techniques?.length > 0 ||
+  selectedDream.other?.length > 0
+)
+
   return (
     <div className="dreams-page">
       <div className="dreams-main-layout">
@@ -341,13 +349,13 @@ function Dreams() {
                                   </h3>
 
                                   {dream.lucid && (
-                                    <span className="dream-badge">
+                                    <span className="dream-badge lucid">
                                       Lucide
                                     </span>
                                   )}
 
                                   {dream.recurring && (
-                                    <span className="dream-badge">
+                                    <span className="dream-badge recurring">
                                       Récurrent
                                     </span>
                                   )}
@@ -530,7 +538,7 @@ function Dreams() {
                     ))}
                 </div>
 
-                <div className="dream-preview-grid">
+                <div className={`dream-preview-grid ${selectedDream.linkedQuests?.length > 0 ? 'has-quests' : 'no-quests'}`}>
 
                   <div className="preview-details-card">
                     <h3>Détails</h3>
@@ -633,29 +641,116 @@ function Dreams() {
                   </div>
 
                   <div className="preview-tags-card">
-                    <h3>Tags</h3>
+                    <h3>Éléments du rêve</h3>
+                     {hasDreamElements ? (
+                      <>
+                    {selectedDream.characters?.length > 0 && (
+                      <>
+                        <h4>👤 Personnages</h4>
+                    
+                        <div className="preview-tags">
+                          {selectedDream.characters.map((character) => (
+                            <span
+                              className="preview-tag character-tag"
+                              key={character}
+                            >
+                              {character}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
 
+                    {selectedDream.places?.length > 0 && (
+                      <>
+                        <h4>📍 Lieux</h4>
+                    
+                        <div className="preview-tags">
+                          {selectedDream.places.map((place) => (
+                            <span
+                              className="preview-tag place-tag"
+                              key={place}
+                            >
+                              {place}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {selectedDream.objects?.length > 0 && (
+                      <>
+                        <h4>🎒 Objets</h4>
+                    
+                        <div className="preview-tags">
+                          {selectedDream.objects.map((object) => (
+                            <span
+                              className="preview-tag object-tag"
+                              key={object}
+                            >
+                              {object}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {selectedDream.techniques?.length > 0 && (
+                      <>
+                        <h4>🧠 Techniques</h4>
+                    
+                        <div className="preview-tags">
+                          {selectedDream.techniques.map((technique) => (
+                            <span
+                              className="preview-tag technique-tag"
+                              key={technique}
+                            >
+                              {technique}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {selectedDream.other?.length > 0 && (
+                      <>
+                        <h4>🏷️ Autres</h4>
+                    
+                        <div className="preview-tags">
+                          {selectedDream.other.map((tag) => (
+                            <span
+                              className="preview-tag other-tag"
+                              key={tag}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                    </>
+                     ) : (
+                      <p className="empty-preview-message">
+                        Aucun élément onirique n'a été identifié dans ce rêve.
+                      </p>
+                    )}
+                  </div>
+                {selectedDream.linkedQuests?.length > 0 && (
+                  <div className="preview-quests-card">
+                    <h3>Quêtes liées</h3>
+                
                     <div className="preview-tags">
-                      {getDreamTags(
-                        selectedDream,
-                      ).length > 0 ? (
-                        getDreamTags(
-                          selectedDream,
-                        ).map((tag, index) => (
-                          <span
-                            className="preview-tag"
-                            key={`${tag}-${index}`}
-                          >
-                            {tag}
-                          </span>
-                        ))
-                      ) : (
-                        <p>
-                          Aucun tag pour ce rêve.
-                        </p>
-                      )}
+                      {selectedDream.linkedQuests.map((questId) => (
+                        <span
+                          key={questId}
+                          className="preview-tag quest-tag"
+                        >
+                          Quête #{questId}
+                        </span>
+                      ))}
                     </div>
                   </div>
+                )}
                 </div>
 
                 {selectedDream.notes && (

@@ -13,7 +13,7 @@
   letter-spacing: 1.3px;
 }
 .quest-form {
-  background: #1c1c24;
+  background: #17131f;
   border: 1px solid #2c2c38;
   border-radius: 20px;
   padding: 24px;
@@ -89,4 +89,20 @@
 }
 .back-button:hover {
   color: #c7b6ff;
+}
+.close-button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9px;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.035);
+  color: #9b95aa;
+  cursor: pointer;
+  font-size: 24px;
+}
+.quest-form-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
