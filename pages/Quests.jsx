@@ -164,7 +164,6 @@ useEffect(() => {
               </div>
 
               <h3>Description</h3>
-
               <p>{selectedQuest.description}</p>
 
               <h3>Rêves liés ({linkedDreams.length})</h3>
