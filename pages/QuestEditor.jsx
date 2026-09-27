@@ -19,31 +19,37 @@ function QuestEditor({ onClose }) {
     e.preventDefault()
 
     if (isEditing) {
-  await updateQuest({
-    id: Number(questId),
-    source,
-    numero:
-      source === 'iktomi'
-        ? Number(numero)
-        : null,
-    title,
-    description,
-    status,
-  })
-} else {
-  await addQuest({
-    source,
-    numero:
-      source === 'iktomi'
-        ? Number(numero)
-        : null,
-    title,
-    description,
-    status,
-    linkedDreams: [],
-    createdAt: new Date().toISOString(),
+      await updateQuest({
+        id: Number(questId),
+        source,
+        numero:
+          source === 'iktomi'
+            ? Number(numero)
+            : null,
+        title,
+        description,
+        status,
       })
-    }navigate('/quetes')
+    } else {
+      await addQuest({
+        source,
+        numero:
+          source === 'iktomi'
+            ? Number(numero)
+            : null,
+        title,
+        description,
+        status,
+        linkedDreams: [],
+        createdAt: new Date().toISOString(),
+      })
+    }
+    
+    if (onClose) {
+      onClose()
+    } else {
+      navigate('/quetes')
+    }
   }
   useEffect(() => {
   async function loadQuest() {

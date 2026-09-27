@@ -11,15 +11,15 @@ function Quests() {
   const [search, setSearch] = useState('')
   const [showQuestEditor, setShowQuestEditor] = useState(false)
 
+async function loadData() {
+  const questsData = await getAllQuests()
+  const dreamsData = await getAllDreams()
+
+  setQuests(questsData)
+  setDreams(dreamsData)
+}
+
 useEffect(() => {
-  async function loadData() {
-    const questsData = await getAllQuests()
-    const dreamsData = await getAllDreams()
-
-    setQuests(questsData)
-    setDreams(dreamsData)
-  }
-
   loadData()
 }, [])
 
@@ -230,9 +230,12 @@ useEffect(() => {
                   e.stopPropagation()
                 }
               >
-                <QuestEditor onClose={() =>
+                <QuestEditor
+                  onClose={async () => {
+                    await loadData()
                     setShowQuestEditor(false)
-                  } />
+                  }}
+                />
               </div>
             </div>
           )}

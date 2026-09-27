@@ -2,6 +2,25 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
+  height: calc(100vh - 350px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+.quests-grid::-webkit-scrollbar {
+  width: 5px;
+}
+
+.quests-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.quests-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.quests-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(149, 116, 240, 0.35);
 }
 
 .quests-grid-h2{
@@ -80,19 +99,20 @@
 }
 .quests-left {
   flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
-
 .quests-right {
   width: 380px;
   flex-shrink: 0;
-
   background: #1c1c24;
   border: 1px solid #2c2c38;
   border-radius: 20px;
   padding: 24px;
-
   position: sticky;
   top: 24px;
+  min-height: 0;
+  overflow-y: auto;
 }
 .quest-preview-actions {
   display: flex;
