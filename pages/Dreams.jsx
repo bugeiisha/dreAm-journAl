@@ -216,13 +216,15 @@ function Dreams() {
     }
   }, [filteredDreams, selectedDreamId])
 
-  const hasDreamElements = selectedDream && (
+const hasDreamElements =
   selectedDream.characters?.length > 0 ||
   selectedDream.places?.length > 0 ||
   selectedDream.objects?.length > 0 ||
   selectedDream.techniques?.length > 0 ||
   selectedDream.other?.length > 0
-)
+
+const hasQuests =
+  selectedDream.linkedQuests?.length > 0
 
   return (
     <div className="dreams-page">
@@ -538,7 +540,13 @@ function Dreams() {
                     ))}
                 </div>
 
-                <div className={`dream-preview-grid ${selectedDream.linkedQuests?.length > 0 ? 'has-quests' : 'no-quests'}`}>
+                <div
+                  className={`dream-preview-grid ${
+                    hasDreamElements && hasQuests
+                      ? 'has-quests'
+                      : 'no-quests'
+                  }`}
+                >
 
                   <div className="preview-details-card">
                     <h3>Détails</h3>
@@ -640,10 +648,10 @@ function Dreams() {
                     </div>
                   </div>
 
+                  {hasDreamElements && (
                   <div className="preview-tags-card">
                     <h3>Éléments du rêve</h3>
-                     {hasDreamElements ? (
-                      <>
+                      
                     {selectedDream.characters?.length > 0 && (
                       <>
                         <h4>👤 Personnages</h4>
@@ -728,13 +736,9 @@ function Dreams() {
                         </div>
                       </>
                     )}
-                    </>
-                     ) : (
-                      <p className="empty-preview-message">
-                        Aucun élément onirique n'a été identifié dans ce rêve.
-                      </p>
-                    )}
                   </div>
+                      
+                    )}
                 {selectedDream.linkedQuests?.length > 0 && (
                   <div className="preview-quests-card">
                     <h3>Quêtes liées</h3>

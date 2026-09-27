@@ -158,9 +158,21 @@ export async function getQuest(id) {
 }
 
 export async function addQuest(quest) {
-  return dbPromise.then((db) =>
-    db.add('quests', quest),
-  )
+  const db = await dbPromise
+
+  if (quest.source === 'perso') {
+    const quests = await db.getAll('quests')
+
+    quest.numero =
+      Math.max(
+        0,
+        ...quests
+          .filter(q => q.source === 'perso')
+          .map(q => Number(q.numero) || 0)
+      ) + 1
+  }
+
+  return db.add('quests', quest)
 }
 
 export async function updateQuest(quest) {

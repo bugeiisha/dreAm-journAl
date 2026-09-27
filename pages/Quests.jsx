@@ -10,6 +10,7 @@ function Quests() {
   const [dreams, setDreams] = useState([])
   const [search, setSearch] = useState('')
   const [showQuestEditor, setShowQuestEditor] = useState(false)
+  const [editingQuest, setEditingQuest] = useState(null)
 
 async function loadData() {
   const questsData = await getAllQuests()
@@ -118,9 +119,14 @@ useEffect(() => {
                   }
                 >
                 <div className="quest-number">
-                  {quest.source === 'iktomi'
-                    ? `IK-${quest.numero}`
-                    : `P-${quest.id}`}
+                  {quest.source === 'iktomi' &&
+                    `IK-${quest.numero}`}
+                
+                  {quest.source === 'perso' &&
+                    `P-${quest.numero}`}
+                
+                  {quest.source === 'monthly' &&
+                    `M-${quest.numero}`}
                 </div>
 
                 <h3>{quest.title}</h3>
@@ -148,9 +154,14 @@ useEffect(() => {
                   <h2>{selectedQuest.title}</h2>
 
                   <span className="quest-id">
-                    {selectedQuest.source === 'iktomi'
-                      ? `IK-${selectedQuest.numero}`
-                      : `P-${selectedQuest.id}`}
+                    {selectedQuest.source === 'iktomi' &&
+                      `IK-${selectedQuest.numero}`}
+
+                    {selectedQuest.source === 'perso' &&
+                      `P-${selectedQuest.numero}`}
+
+                    {selectedQuest.source === 'monthly' &&
+                      `M-${selectedQuest.numero}`}
                   </span>
                 </div>
                     
@@ -197,7 +208,7 @@ useEffect(() => {
               <button
                 className="quest-edit-button"
                 onClick={() =>
-                  navigate(`/quetes/${selectedQuest.id}`)
+                  setEditingQuest(selectedQuest)
                 }
                 aria-label="Modifier cette quête"
                 title="Modifier cette quête"
@@ -243,6 +254,29 @@ useEffect(() => {
                   onClose={async () => {
                     await loadData()
                     setShowQuestEditor(false)
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          {editingQuest && (
+            <div
+              className="notes-form-overlay"
+              onClick={() =>
+                setEditingQuest(null)
+              }
+            >
+              <div
+                className="notes-form"
+                onClick={(e) =>
+                  e.stopPropagation()
+                }
+              >
+                <QuestEditor
+                  questId={editingQuest.id}
+                  onClose={async () => {
+                    await loadData()
+                    setEditingQuest(null)
                   }}
                 />
               </div>

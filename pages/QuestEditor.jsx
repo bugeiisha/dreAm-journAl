@@ -5,15 +5,24 @@ import './QuestEditor.css'
 import { useParams } from 'react-router-dom'
 import { getQuest, updateQuest } from '../src/db/dreamDatabase'
 
-function QuestEditor({ onClose }) {
-  const navigate = useNavigate()
-  const { questId } = useParams()
+function QuestEditor({
+  onClose,
+  questId: propQuestId,
+}) {
+  const params = useParams()
+
+  const questId =
+    propQuestId || params.questId
+
   const isEditing = Boolean(questId)
+  const navigate = useNavigate()
+  console.log('questId', questId)
+console.log('isEditing', isEditing)
   const [source, setSource] = useState('iktomi')
   const [numero, setNumero] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [status, setStatus] = useState('todo')
+  const [status, setStatus] = useState('pending')
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -25,18 +34,25 @@ function QuestEditor({ onClose }) {
         numero:
           source === 'iktomi'
             ? Number(numero)
-            : null,
+            : numero,
         title,
         description,
         status,
       })
     } else {
+      console.log('Création', {
+  source,
+  numero,
+  title,
+  description,
+  status,
+})
       await addQuest({
         source,
         numero:
           source === 'iktomi'
             ? Number(numero)
-            : null,
+            : numero,
         title,
         description,
         status,
@@ -79,7 +95,14 @@ function QuestEditor({ onClose }) {
                 ? 'MODIFICATION'
                 : 'NOUVELLE QUÊTE'}
             </span>
-            <button type="button" className="close-button" onClick={onClose}>
+            <button type="button" className="close-button" 
+            onClick={() => {
+              if (onClose) {
+                onClose()
+              } else {
+                navigate('/quetes')
+              }
+            }}>
               ✕
             </button>
           </div>
@@ -110,9 +133,11 @@ function QuestEditor({ onClose }) {
           <option value="iktomi">
             Iktomi
           </option>
-
           <option value="perso">
             Personnelle
+          </option>
+          <option value="monthly">
+            Quête du mois
           </option>
         </select>
 
@@ -122,6 +147,33 @@ function QuestEditor({ onClose }) {
 
             <input
               type="number"
+              value={numero}
+              onChange={(e) =>
+                setNumero(e.target.value)
+              }
+            />
+          </>
+        )}
+
+        {source === 'perso' && (
+          <>
+            <label>Numéro</label>
+                
+            <input
+              type="text"
+              value=""
+              placeholder="Attribué automatiquement"
+              disabled
+            />
+          </>
+        )}
+        {source === 'monthly' && (
+          <>
+            <label>Mois / Année</label>
+
+            <input
+              type="text"
+              placeholder="Avril 2025"
               value={numero}
               onChange={(e) =>
                 setNumero(e.target.value)
@@ -160,13 +212,20 @@ function QuestEditor({ onClose }) {
           <option value="pending">
             À tester
           </option>
-                  
+
           <option value="success">
             Réussie
           </option>
         </select>
 
-        <button type="submit" className="quest-submit">Créer la quête</button>
+        <button
+          type="submit"
+          className="quest-submit"
+        >
+          {isEditing
+            ? 'Enregistrer les modifications'
+            : 'Créer la quête'}
+        </button>
       </form>
     </div>
   )
