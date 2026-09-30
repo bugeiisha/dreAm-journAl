@@ -9,7 +9,6 @@
 
 .dreams-main-layout {
   display: grid;
-  grid-template-columns: minmax(520px, 1.15fr) minmax(420px, 0.85fr);
   gap: 28px;
   height: calc(100vh - 140px);
   min-height: 0;
@@ -97,12 +96,17 @@
 ========================= */
 
 .filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
+   display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    margin-top: 14px;
 }
-
+.filters > * {
+    flex: 0 0 auto;
+}
 .filter-button {
   padding: 8px 12px;
   color: var(--color-text-secondary);
@@ -383,7 +387,6 @@
   padding: 20px 22px 0;
 }
 
-.dream-back-button,
 .dream-edit-button {
   color: var(--color-text-secondary);
   background: transparent;
@@ -393,19 +396,6 @@
     color 0.2s ease,
     background 0.2s ease;
 }
-
-.dream-back-button {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 8px;
-  font-size: 12px;
-}
-
-.dream-back-button:hover {
-  color: var(--color-accent);
-}
-
 .dream-edit-button {
   display: flex;
   align-items: center;
@@ -762,70 +752,110 @@
   text-align: center;
   color: var(--color-text-secondary);
 }
-
+.dream-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: rgba(20, 26, 36, 0.72);
+  backdrop-filter: blur(7px);
+}
+.dream-detail-modal {
+  position: relative;
+  width: min(850px, 100%);
+  max-height: min(820px, calc(100vh - 60px));
+  overflow-y: auto;
+  padding: 28px;
+  background: var(--color-surface);
+  border: 1px solid rgba(170, 184, 204, 0.12);
+  border-radius: 22px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+}
+.dream-detail-modal::-webkit-scrollbar {
+  width: 5px;
+}
+.dream-detail-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dream-detail-modal::-webkit-scrollbar-thumb {
+  background: rgba(170, 184, 204, 0.15);
+  border-radius: 10px;
+}
+.dream-detail-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  color: var(--color-text-secondary);
+  font-size: 24px;
+  line-height: 1;
+  background: rgba(170, 184, 204, 0.05);
+  border: 1px solid rgba(170, 184, 204, 0.08);
+  border-radius: 9px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.dream-detail-close:hover {
+  color: var(--color-text);
+  background: rgba(170, 184, 204, 0.10);
+}
+.dream-detail-modal .dream-preview-top {
+  padding-right: 45px;
+}
 /* =========================
    RESPONSIVE
 ========================= */
 
-@media (max-width: 1200px) {
-  .dreams-page {
-    height: auto;
-  }
-
-  .dreams-main-layout {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-  }
-
-  .dreams-list-panel {
-    height: 100vh;
-    overflow-y: auto;
-  }
-
-  .dreams-scroll-area {
-    max-height: none;
-    overflow-y: auto;
-  }
-
-  .dream-preview-panel {
-    min-height: 60vh;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-
-  .dream-preview-scroll {
-    overflow-y: auto;
-  }
-}
-
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .dreams-header {
     flex-direction: column;
   }
-
   .dreams-header h2 {
     font-size: 32px;
   }
-
   .dreams-header .primary-button {
     width: 100%;
   }
-
   .dream-row {
     align-items: flex-start;
   }
-
   .dream-row-mood {
     display: none;
   }
-
   .dream-preview-grid.has-quests,
   .dream-preview-grid.no-quests {
     grid-template-columns: 1fr !important;
   }
-
   .dream-preview-heading h2 {
     font-size: 26px;
+  }
+  .dream-detail-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .dream-detail-modal {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    max-height: 92vh;
+    padding: 22px;
+    overflow-x: hidden;
+    border-radius: 22px 22px 0 0;
+    margin: 15px;
+  }
+  .dream-detail-overlay {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 }

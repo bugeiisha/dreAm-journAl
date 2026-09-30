@@ -360,16 +360,12 @@ function Dashboard() {
               ))
             ) : (
               <div className="dashboard-empty-dreams">
-                <span>☾</span>
-
                 <h3>
                   Ton journal est encore vide
                 </h3>
-
                 <p>
                   Ton premier rêve apparaîtra ici.
                 </p>
-
                 <button
                   className="text-button"
                   onClick={() =>

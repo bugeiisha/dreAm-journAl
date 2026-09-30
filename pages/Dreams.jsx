@@ -118,9 +118,6 @@ function Dreams() {
 
         setDreams(sortedDreams)
 
-        if (sortedDreams.length > 0) {
-          setSelectedDreamId(sortedDreams[0].id)
-        }
       } catch (error) {
         console.error(
           'Impossible de charger les rêves :',
@@ -203,17 +200,6 @@ function Dreams() {
         (dream) => dream.id === selectedDreamId,
       ) || null
     )
-  }, [filteredDreams, selectedDreamId])
-
-  useEffect(() => {
-    if (
-      filteredDreams.length > 0 &&
-      !filteredDreams.some(
-        (dream) => dream.id === selectedDreamId,
-      )
-    ) {
-      setSelectedDreamId(filteredDreams[0].id)
-    }
   }, [filteredDreams, selectedDreamId])
 
 const hasDreamElements =
@@ -433,18 +419,23 @@ const hasQuests =
 
         {/* PANNEAU DE DROITE */}
 
-        <aside className="dream-preview-panel">
-          {selectedDream ? (
-            <>
+        {selectedDream && (
+          <div
+            className="dream-detail-overlay"
+            onClick={() => setSelectedDreamId(null)}
+          >
+            <div
+              className="dream-detail-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+            
               <div className="dream-preview-top">
                 <button
-                  className="dream-back-button"
-                  onClick={() =>
-                    setSelectedDreamId(null)
-                  }
+                  className="dream-detail-close"
+                  onClick={() => setSelectedDreamId(null)}
+                  aria-label="Fermer"
                 >
-                  ←
-                  <span>Retour</span>
+                  ×
                 </button>
                 
                 <div className="dream-preview-actions">
@@ -768,20 +759,14 @@ const hasQuests =
                   </div>
                 )}
               </div>
-            </>
-          ) : (
-            <div className="no-dream-selected">
-              <span>☾</span>
-
-              <h3>Sélectionne un rêve</h3>
-
-              <p>
-                Choisis un rêve dans ton journal
-                pour l'afficher ici.
-              </p>
             </div>
-          )}
-        </aside>
+          </div>
+        )}
+
+
+
+
+
       </div>
     </div>
   )
