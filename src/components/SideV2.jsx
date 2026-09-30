@@ -11,16 +11,17 @@ const mainNavigation = [
   { icon: '', label: 'Tableau de bord', path: '/' },
   { icon: '', label: 'Mes rêves', path: '/reves' },
   { icon: '', label: 'Quêtes', path: '/quetes' },
-  { icon: '', label: 'Carte onirique', path: '/carte' },
+  { icon: '', label: 'PR', path: '/characters' },
+  { icon: '', label: 'Notes', path: '/notes' },
   { icon: '', label: 'Statistiques', path: '/statistiques' },
 ]
 
 const tagsNavigation = [
-  { icon: '', label: 'Characters', path: '/characters' },
+  { icon: '', label: 'Carte onirique', path: '/carte' },
   { icon: '', label: 'Places', path: '/places' },
   { icon: '', label: 'Objects', path: '/objects' },
   { icon: '', label: 'Other', path: '/other' },
-  { icon: '', label: 'Notes', path: '/notes' },
+  { label: 'Paramètres', path: '/parametres' },
 ]
 const mobileNavigation = [
   { icon: <FaHome />, label: 'Tableau de bord', path: '/' },

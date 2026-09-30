@@ -71,6 +71,103 @@ useEffect(() => {
     <div className="quests-page">
       <div className="quests-layout">
         <div className="quests-left">
+          {selectedQuest && (
+  <div
+    className="quest-detail-overlay"
+    onClick={() => setSelectedQuestId(null)}
+  >
+    <div
+      className="quest-detail-modal"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        className="quest-detail-close"
+        onClick={() => setSelectedQuestId(null)}
+        aria-label="Fermer"
+      >
+        ×
+      </button>
+
+      <div className="quest-detail-header">
+        <div>
+          <h2>{selectedQuest.title}</h2>
+
+          <span className="quest-id">
+            {selectedQuest.source === 'iktomi' &&
+              `IK-${selectedQuest.numero}`}
+
+            {selectedQuest.source === 'perso' &&
+              `P-${selectedQuest.numero}`}
+
+            {selectedQuest.source === 'monthly' &&
+              `M-${selectedQuest.numero}`}
+          </span>
+        </div>
+
+        <div className="quest-status-badge">
+          {questProgress === 'success'
+            ? '🟢 Réussie'
+            : questProgress === 'attempted'
+            ? '🟣 Tentée'
+            : '🟡 À tester'}
+        </div>
+      </div>
+
+      <h3>Description</h3>
+      <p>{selectedQuest.description}</p>
+
+      <h3>Rêves liés ({linkedDreams.length})</h3>
+
+      <div className="linked-dreams">
+        {linkedDreams.length === 0 ? (
+          <p>Aucun rêve lié.</p>
+        ) : (
+          linkedDreams.map((dream) => (
+            <button
+              key={dream.id}
+              className="linked-dream-button"
+              onClick={() =>
+                navigate(`/reves/${dream.id}`)
+              }
+            >
+              <div>
+                <strong>
+                  ☾ {dream.title || 'Rêve sans titre'}
+                </strong>
+
+                <div className="linked-dream-date">
+                  {dream.date}
+                </div>
+              </div>
+            </button>
+          ))
+        )}
+      </div>
+
+      <div className="quest-preview-actions">
+        <button
+          className="quest-edit-button"
+          onClick={() =>
+            setEditingQuest(selectedQuest)
+          }
+          aria-label="Modifier cette quête"
+          title="Modifier cette quête"
+        >
+          ✎
+        </button>
+
+        <button
+          className="quest-delete-button"
+          onClick={handleDelete}
+          aria-label="Supprimer cette quête"
+          title="Supprimer cette quête"
+        >
+          🗑
+        </button>
+      </div>
+    </div>
+  </div>
+)}
           <div className="quests-header">
             <span className="quests-eyebrow">
               QUÊTES ONIRIQUE
@@ -146,97 +243,7 @@ useEffect(() => {
 
         </div>
 
-        <aside className="quests-right">
-          {selectedQuest ? (
-            <>
-              <div className="quest-detail-header">
-                <div>
-                  <h2>{selectedQuest.title}</h2>
-
-                  <span className="quest-id">
-                    {selectedQuest.source === 'iktomi' &&
-                      `IK-${selectedQuest.numero}`}
-
-                    {selectedQuest.source === 'perso' &&
-                      `P-${selectedQuest.numero}`}
-
-                    {selectedQuest.source === 'monthly' &&
-                      `M-${selectedQuest.numero}`}
-                  </span>
-                </div>
-                    
-                <div className="quest-status-badge">
-                  {questProgress === 'success'
-                    ? '🟢 Réussie'
-                    : questProgress === 'attempted'
-                    ? '🟣 Tentée'
-                    : '🟡 À tester'}
-                </div>
-              </div>
-
-              <h3>Description</h3>
-              <p>{selectedQuest.description}</p>
-
-              <h3>Rêves liés ({linkedDreams.length})</h3>
-
-              <div className="linked-dreams">
-                  {linkedDreams.length === 0 ? (
-                    <p>Aucun rêve lié.</p>
-                  ) : (
-                    linkedDreams.map((dream) => (
-                      <button
-                        key={dream.id}
-                        className="linked-dream-button"
-                        onClick={() =>
-                          navigate(`/reves/${dream.id}`)
-                        }
-                      >
-                        <div>
-                          <strong>
-                            ☾ {dream.title || 'Rêve sans titre'}
-                          </strong>
-                                              
-                          <div className="linked-dream-date">
-                            {dream.date}
-                          </div>
-                        </div>
-                      </button>
-                    ))
-                  )}
-                </div>
-              <div className="quest-preview-actions">
-              <button
-                className="quest-edit-button"
-                onClick={() =>
-                  setEditingQuest(selectedQuest)
-                }
-                aria-label="Modifier cette quête"
-                title="Modifier cette quête"
-              >
-                ✎
-              </button>
-            
-              <button
-                className="quest-delete-button"
-                onClick={handleDelete}
-                aria-label="Supprimer cette quête"
-                title="Supprimer cette quête"
-              >
-                🗑
-              </button>
-            </div>
-            </>
-          ) : (
-            <div className="no-quest-selected">
-              <h3>Sélectionne une quête</h3>
-
-              <p>
-                Clique sur une carte pour afficher
-                les détails.
-              </p>
-            </div>
-          )}
-        </aside>
+        
           {showQuestEditor && (
             <div
               className="notes-form-overlay"
