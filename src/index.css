@@ -3,6 +3,20 @@
 * {
   box-sizing: border-box;
 }
+:root {
+  --color-bg: #141A24;
+  --color-surface: #1C2432;
+  --color-surface-light: #273244;
+
+  --color-primary: #AAB8CC;
+  --color-accent: #C9A982;
+
+  --color-success: #7FA58B;
+  --color-danger: #B8757C;
+
+  --color-text: #E7E5DF;
+  --color-text-secondary: #9AA3B2;
+}
 html,
 body,
 #root {
@@ -12,55 +26,69 @@ body,
   margin: 0;
 }
 body {
-  color: #f7f5ff;
+  color: var(--color-text);
   font-family: 'DM Sans', sans-serif;
-  background: #090914;
+  background: var(--color-bg);
 }
-button,input,textarea,select {
+
+button,
+input,
+textarea,
+select {
   font: inherit;
 }
+
 button {
   -webkit-tap-highlight-color: transparent;
 }
+
 .app {
   min-height: 100vh;
 }
+
 .main-content {
-  min-height: 100vh;
-  margin-left: 260px;
-  padding: 40px 60px;
+  min-height: calc(100vh - 70px);
+  padding: 30px 60px;
 }
+
 .dashboard-placeholder {
   max-width: 900px;
 }
+
 .eyebrow {
-  color: #8e72ed;
+  color: var(--color-accent);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 1.4px;
 }
+
 .dashboard-placeholder h2 {
   margin: 12px 0 8px;
+  color: var(--color-text);
   font-size: 42px;
   font-weight: 600;
   letter-spacing: -1.5px;
 }
+
 .dashboard-placeholder p {
   margin: 0;
-  color: #9d9aac;
+  color: var(--color-text-secondary);
   font-size: 16px;
 }
+
 .placeholder-page h2 {
   margin-top: 0;
+  color: var(--color-text);
 }
+
 .placeholder-page p {
-  color: #8e8a9d;
+  color: var(--color-text-secondary);
 }
+
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
-    padding: 24px 20px 24px;
-    padding-top: 76px;
+    padding: 24px 20px 90px;
   }
 
   .dashboard-placeholder h2 {

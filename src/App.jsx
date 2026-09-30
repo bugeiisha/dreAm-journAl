@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import Dreams from '../pages/Dreams'
 import DreamEditor from '../pages/DreamEditor'
-import Sidebar from './components/Sidebar'
+//import Sidebar from './components/Sidebar'
+import SideV2 from './components/SideV2'
 import Dashboard from '../pages/Dashboard'
 import Stats from '../pages/Stats'
 import DreamMap from '../pages/DreamMap'
@@ -23,7 +24,8 @@ function PlaceholderPage({ title }) {
 function App() {
   return (
     <div className="app">
-      <Sidebar />
+      {/*<Sidebar />*/}
+      <SideV2 />
 
       <main className="main-content">
         <Routes>

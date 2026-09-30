@@ -81,6 +81,7 @@
 .settings-button {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   text-decoration: none;
   width: 100%;
@@ -88,7 +89,6 @@
   color: #a6a3b9;
   font: inherit;
   font-size: 14px;
-  text-align: left;
   background: transparent;
   border: none;
   border-radius: 10px;

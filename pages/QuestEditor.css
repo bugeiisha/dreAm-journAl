@@ -5,71 +5,74 @@
 
 .quest-editor h1 {
   margin-bottom: 24px;
+  color: var(--color-text);
 }
+
 .page-eyebrow {
-  color: #9276ec;
+  color: var(--color-accent);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 1.3px;
 }
+
 .quest-form {
-  background: #17131f;
-  border: 1px solid #2c2c38;
-  border-radius: 20px;
-  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid rgba(168, 184, 216, 0.10);
+  border-radius: 20px;
 }
 
 .quest-form label {
-  font-weight: 600;
   margin-bottom: -8px;
+  color: var(--color-text);
+  font-weight: 600;
 }
 
 .quest-form input,
 .quest-form select,
 .quest-form textarea {
-  background: #14141b;
-  border: 1px solid #2c2c38;
-  border-radius: 12px;
   padding: 12px 14px;
-
-  color: white;
+  color: var(--color-text);
   font-size: 0.95rem;
-}
-
-.quest-form textarea {
-  resize: vertical;
-  min-height: 120px;
+  background: var(--color-bg);
+  border: 1px solid rgba(168, 184, 216, 0.10);
+  border-radius: 12px;
 }
 
 .quest-form input:focus,
 .quest-form select:focus,
 .quest-form textarea:focus {
   outline: none;
-  border-color: #8b5cf6;
+  background: var(--color-surface-light);
+  border-color: var(--color-accent);
 }
 
+.quest-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
 .quest-submit {
   margin-top: 8px;
-
-  background: #8b5cf6;
-  color: white;
-
+  padding: 14px;
+  color: var(--color-bg);
+  font-weight: 600;
+  background: var(--color-accent);
   border: none;
   border-radius: 12px;
-
-  padding: 14px;
-  font-weight: 600;
-
   cursor: pointer;
-  transition: 0.2s;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .quest-submit:hover {
+  background: #E0C29F;
   transform: translateY(-2px);
 }
+
 .quest-editor-header {
   display: flex;
   align-items: flex-start;
@@ -80,29 +83,37 @@
 
 .back-button {
   padding: 0;
-  color: #908a9f;
+  color: var(--color-text-secondary);
   font-size: 12px;
   background: none;
   border: none;
   cursor: pointer;
   transition: color 0.2s ease;
 }
+
 .back-button:hover {
-  color: #c7b6ff;
+  color: var(--color-accent);
 }
+
 .close-button {
   width: 34px;
   height: 34px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 9px;
-  line-height: 1;
-  background: rgba(255, 255, 255, 0.035);
-  color: #9b95aa;
-  cursor: pointer;
+  color: var(--color-text-secondary);
   font-size: 24px;
+  line-height: 1;
+  background: rgba(168, 184, 216, 0.035);
+  border: 1px solid rgba(168, 184, 216, 0.10);
+  border-radius: 9px;
+  cursor: pointer;
 }
-.quest-form-header{
+
+.close-button:hover {
+  color: var(--color-text);
+  background: rgba(168, 184, 216, 0.08);
+}
+
+.quest-form-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }

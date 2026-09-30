@@ -6,11 +6,11 @@ import { getDreamStats, getCurrentStreak, getLongestStreak, getDailyActivity, ge
 import './Stats.css'
 
 const PIE_COLORS = [
-  '#8B7DD8',
-  '#BFA8E8',
-  '#7566C2',
-  '#D8C7F2',
-  '#55489B',
+  '#A8B8D8',
+  '#D6B48A',
+  '#829B82',
+  '#B97878',
+  '#9299AA',
 ]
 
 function formatNumber(number) {
@@ -242,7 +242,7 @@ function Stats() {
               <Bar
                 dataKey="count"
                 name="Rêves"
-                fill="#8B7DD8"
+                fill="#D6B48A"
                 radius={[6, 6, 0, 0]}
               />
             </BarChart>
@@ -292,7 +292,7 @@ function Stats() {
                 <Bar
                   dataKey="count"
                   name="Rêves"
-                  fill="#BFA8E8"
+                  fill="#A8B8D8"
                   radius={[6, 6, 0, 0]}
                 />
               </BarChart>
@@ -341,7 +341,7 @@ function Stats() {
                     type="monotone"
                     dataKey="mood"
                     name="Mood"
-                    stroke="#8B7DD8"
+                    stroke="#829B82"
                     strokeWidth={3}
                     dot={{
                       r: 3,
@@ -462,7 +462,7 @@ function Stats() {
                 <Bar
                   dataKey="count"
                   name="Rêves"
-                  fill="#7566C2"
+                  fill="#D6B48A"
                   radius={[6, 6, 0, 0]}
                 />
               </BarChart>

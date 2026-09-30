@@ -294,7 +294,7 @@ return (
 
           <button
             type="button"
-            className="secondary-button"
+            className="secondary-button-settings"
             onClick={handleBackupImportClick}
             disabled={isImporting}
           >
@@ -328,7 +328,7 @@ return (
     
         <button
           type="button"
-          className="secondary-button"
+          className="secondary-button-settings"
           onClick={handleImportClick}
           disabled={isImporting}
         >

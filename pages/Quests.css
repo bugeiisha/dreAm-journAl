@@ -7,6 +7,7 @@
   padding-right: 6px;
   align-content: start;
 }
+
 .quests-grid::-webkit-scrollbar {
   width: 5px;
 }
@@ -16,111 +17,128 @@
 }
 
 .quests-grid::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(168, 184, 216, 0.12);
   border-radius: 10px;
 }
 
 .quests-grid::-webkit-scrollbar-thumb:hover {
-  background: rgba(149, 116, 240, 0.35);
+  background: rgba(214, 180, 138, 0.35);
 }
 
-.quests-grid-h2{
+.quests-grid-h2 {
   margin: 20px 0 14px;
-  color: #6f6b7e;
+  color: var(--color-text-secondary);
   font-size: 12px;
 }
-.quests-eyebrow{
-  color: #a78bfa;
+
+.quests-eyebrow {
+  color: var(--color-accent);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.14em;
 }
-.quests-header p{
+
+.quests-header p {
   margin-bottom: 20px;
+  color: var(--color-text-secondary);
   font-size: 14px;
-  color: #8e8a9d;
 }
+
 .quest-card {
-  background: #1c1c24;
-  border: 1px solid #2c2c38;
-  border-radius: 18px;
-  padding: 18px;
   display: flex;
   flex-direction: column;
+  padding: 18px;
+  background: var(--color-surface);
+  border: 1px solid rgba(168, 184, 216, 0.10);
+  border-radius: 18px;
   cursor: pointer;
-  transition: 0.2s;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .quest-card:hover {
+  background: var(--color-surface-light);
+  border-color: rgba(214, 180, 138, 0.25);
   transform: translateY(-3px);
 }
 
 .quest-number {
+  margin-bottom: 12px;
+  color: var(--color-text-secondary);
   font-size: 0.8rem;
   opacity: 0.7;
-  margin-bottom: 12px;
 }
 
 .quest-card h3 {
   margin-bottom: 12px;
+  color: var(--color-text);
 }
 
 .quest-card p {
   flex: 1;
-  opacity: 0.8;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
+  opacity: 0.8;
 }
 
 .quest-footer {
   margin-top: 16px;
+  color: var(--color-text-secondary);
   font-size: 0.85rem;
 }
 
 .quest-card.todo {
-  border-left: 4px solid #f4c542;
+  border-left: 4px solid var(--color-accent);
 }
 
 .quest-card.success {
-  border-left: 4px solid #48c774;
+  border-left: 4px solid var(--color-success);
 }
 
 .quest-card.failed {
-  border-left: 4px solid #ff5c5c;
+  border-left: 4px solid var(--color-danger);
 }
+
 .quests-layout {
   display: flex;
-  gap: 24px;
   align-items: flex-start;
-  max-width: 1200px;
+  gap: 24px;
   width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
 }
+
 .quests-left {
   flex: 1;
-  overflow-y: auto;
   min-height: 0;
+  overflow-y: auto;
 }
+
 .quests-right {
-  width: 380px;
-  flex-shrink: 0;
-  background: #1c1c24;
-  border: 1px solid #2c2c38;
-  border-radius: 20px;
-  padding: 24px;
   position: sticky;
   top: 24px;
+  width: 380px;
   min-height: 0;
+  flex-shrink: 0;
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid rgba(168, 184, 216, 0.10);
+  border-radius: 20px;
   overflow-y: auto;
 }
+
 .quest-preview-actions {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 20px;
 }
+
 .quest-back-button,
 .quest-edit-button {
-  color: #918ba3;
+  color: var(--color-text-secondary);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -138,7 +156,7 @@
 }
 
 .quest-back-button:hover {
-  color: #d4c9ff;
+  color: var(--color-accent);
 }
 
 .quest-edit-button {
@@ -148,14 +166,15 @@
   width: 36px;
   height: 36px;
   font-size: 20px;
+  border: 1px solid rgba(168, 184, 216, 0.15);
   border-radius: 10px;
-  border: 1px solid rgba(145, 145, 145, 0.2);
 }
 
 .quest-edit-button:hover {
-  color: #ded5ff;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+  background: rgba(168, 184, 216, 0.08);
 }
+
 .quest-delete-button {
   display: flex;
   align-items: center;
@@ -163,10 +182,10 @@
   width: 38px;
   height: 38px;
   padding: 0;
-  color: #f094a4;
+  color: var(--color-danger);
   font-size: 16px;
-  background: rgba(224, 92, 114, 0.08);
-  border: 1px solid rgba(224, 92, 114, 0.2);
+  background: rgba(185, 120, 120, 0.08);
+  border: 1px solid rgba(185, 120, 120, 0.20);
   border-radius: 10px;
   cursor: pointer;
   transition:
@@ -176,10 +195,11 @@
 }
 
 .quest-delete-button:hover {
-  background: rgba(224, 92, 114, 0.16);
-  border-color: rgba(224, 92, 114, 0.45);
+  background: rgba(185, 120, 120, 0.16);
+  border-color: rgba(185, 120, 120, 0.45);
   transform: translateY(-1px);
 }
+
 .linked-dreams {
   display: flex;
   flex-direction: column;
@@ -189,60 +209,69 @@
 .linked-dream-button {
   width: 100%;
   padding: 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.04);
-  color: #e5e7eb;
+  color: var(--color-text);
   text-align: left;
+  background: rgba(168, 184, 216, 0.05);
+  border: 1px solid rgba(168, 184, 216, 0.10);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
+
 .linked-dream-button:hover {
-  background: rgba(139,92,246,0.15);
-  border-color: #8b5cf6;
+  background: rgba(214, 180, 138, 0.10);
+  border-color: rgba(214, 180, 138, 0.35);
   transform: translateY(-1px);
 }
+
 .linked-dream-date {
   margin-top: 4px;
+  color: var(--color-text-secondary);
   font-size: 0.85rem;
   opacity: 0.65;
 }
+
 .quest-detail-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
 .quest-detail-header h2 {
   margin-bottom: 4px;
+  color: var(--color-text);
 }
 
 .quest-id {
   display: block;
-  opacity: 0.6;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
+  opacity: 0.6;
 }
 
 .quest-status-badge {
   padding: 8px 12px;
+  color: var(--color-text);
+  background: rgba(168, 184, 216, 0.08);
   border-radius: 999px;
-
-  background: rgba(255,255,255,0.08);
-
   font-size: 0.9rem;
   white-space: nowrap;
 }
+
 .quests-primary-button {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 12px 17px;
-  color: #ffffff;
+  color: var(--color-text);
   font-size: 13px;
   font-weight: 500;
-  background: rgba(126, 93, 229, 0.18);
-  border: 1px solid rgba(154, 121, 255, 0.3);
+  background: rgba(214, 180, 138, 0.16);
+  border: 1px solid rgba(214, 180, 138, 0.35);
   border-radius: 10px;
   cursor: pointer;
 }
@@ -251,6 +280,7 @@
   font-size: 19px;
   line-height: 1;
 }
+
 .quests-toolbar {
   display: flex;
   gap: 10px;
@@ -260,10 +290,16 @@
 .quest-search {
   flex: 1;
   padding: 10px 14px;
+  color: var(--color-text);
+  background: rgba(168, 184, 216, 0.05);
+  border: 1px solid rgba(168, 184, 216, 0.10);
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.1);
-  background: rgba(255,255,255,.04);
-  color: inherit;
+  outline: none;
+}
+
+.quest-search:focus {
+  background: var(--color-surface-light);
+  border-color: var(--color-accent);
 }
 
 @media (max-width: 768px) {
@@ -271,6 +307,7 @@
     display: flex;
     flex-direction: column;
   }
+
   .quests-grid {
     display: grid;
     grid-template-columns: minmax(280px, 500px);
@@ -280,51 +317,61 @@
     overflow-y: auto;
     margin-top: 10px;
   }
+
   .quest-card h3 {
     font-size: 0.95rem;
   }
+
   .quests-right {
-    margin-top: 16px;
     width: 100%;
     max-width: 100%;
     min-width: 0;
+    margin-top: 16px;
     box-sizing: border-box;
     overflow-x: hidden;
   }
-  .quests-header h2{
-    margin: 9px 0px;
+
+  .quests-header h2 {
+    margin: 9px 0;
     align-items: stretch;
     gap: 12px;
   }
-  .quests-header p{
+
+  .quests-header p {
     margin: inherit;
     margin-bottom: 20px;
+    color: var(--color-text-secondary);
     font-size: 14px;
-    color: #8e8a9d;
   }
+
   .quest-detail-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
     width: 100%;
   }
+
   .quest-status-badge {
     align-self: flex-start;
     white-space: normal;
   }
+
   .quest-preview-actions {
     display: flex;
     gap: 12px;
     margin-top: 20px;
   }
+
   .quest-edit-button,
   .quest-delete-button {
     flex: 1;
     min-height: 44px;
   }
+
   .linked-dream-button {
     min-height: 48px;
   }
+
   .quests-toolbar {
     display: flex;
     align-items: center;
@@ -332,21 +379,23 @@
     gap: 10px;
     margin-bottom: 16px;
   }
+
   .quests-primary-button {
     width: 100%;
     justify-content: center;
     padding: 14px 17px;
     order: 1;
   }
+
   .quest-search {
     flex: 1;
+    width: 100%;
     min-width: 0;
     padding: 12px;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.1);
-    background: rgba(255,255,255,.05);
-    color: white;
-    width: 100%;
+    background: rgba(168, 184, 216, 0.05);
+    border: 1px solid rgba(168, 184, 216, 0.10);
+    color: var(--color-text);
     order: 2;
   }
 

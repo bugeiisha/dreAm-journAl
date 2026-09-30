@@ -917,7 +917,7 @@ const filteredPRs = allPRs.filter((pr) =>
         ========================= */}
         
         <div className="form-section">
-          <h3>⚑ Quêtes liées</h3>
+          <h3 className='form-label'>Quêtes liées</h3>
 
           <div className="quest-selector">
             {allQuests.length === 0 ? (
