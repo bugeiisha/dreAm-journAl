@@ -125,7 +125,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .quest-back-button,
@@ -315,6 +315,7 @@
   border: 1px solid rgba(170, 184, 204, 0.12);
   border-radius: 22px;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+  margin: 22px;
 }
 
 .quest-detail-modal::-webkit-scrollbar {
@@ -331,9 +332,6 @@
 }
 
 .quest-detail-close {
-  position: absolute;
-  top: 18px;
-  right: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -358,12 +356,11 @@
 }
 
 .quest-detail-modal .quest-detail-header {
-  padding-right: 45px;
   margin-bottom: 26px;
 }
 
 .quest-detail-modal .quest-detail-header h2 {
-  margin: 0 0 5px;
+  margin: inherit;
   color: var(--color-text);
   font-size: 25px;
   font-weight: 500;
@@ -399,9 +396,14 @@
   gap: 8px;
 }
 
-.quest-detail-modal .quest-preview-actions {
-  justify-content: flex-end;
-  margin-top: 25px;
+.quest-detail-header-infos{
+  width: 100%;
+}
+.quest-detail-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -467,7 +469,6 @@
 
   .quest-detail-header {
     flex-direction: column;
-    align-items: flex-start;
     gap: 12px;
     width: 100%;
   }
@@ -475,12 +476,6 @@
   .quest-status-badge {
     align-self: flex-start;
     white-space: normal;
-  }
-
-  .quest-preview-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
   }
 
   .quest-edit-button,

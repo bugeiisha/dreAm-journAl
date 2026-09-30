@@ -428,45 +428,22 @@ const hasQuests =
               className="dream-detail-modal"
               onClick={(e) => e.stopPropagation()}
             >
-            
-              <div className="dream-preview-top">
-                <button
-                  className="dream-detail-close"
-                  onClick={() => setSelectedDreamId(null)}
-                  aria-label="Fermer"
-                >
-                  ×
-                </button>
-                
-                <div className="dream-preview-actions">
-                  <button
-                    className="dream-edit-button"
-                    onClick={() =>
-                      navigate(`/reves/${selectedDream.id}`)
-                    }
-                    aria-label="Modifier ce rêve"
-                    title="Modifier ce rêve"
-                  >
-                    ✎
-                  </button>
-                  
-                  <button
-                    className="dream-delete-button"
-                    onClick={handleDelete}
-                    aria-label="Supprimer ce rêve"
-                    title="Supprimer ce rêve"
-                  >
-                    🗑
-                  </button>
-                </div>
-              </div>
                   
               <div className="dream-preview-scroll">
                 <div className="dream-preview-heading">
-                  <h2>
-                    {selectedDream.title ||
-                      'Rêve sans titre'}
-                  </h2>
+                  <div className="dream-preview-header">
+                    <h2 className='dream-preview-header-title'>
+                      {selectedDream.title ||
+                        'Rêve sans titre'}
+                    </h2>
+                    <button
+                      className="dream-detail-close"
+                      onClick={() => setSelectedDreamId(null)}
+                      aria-label="Fermer"
+                    >
+                      ×
+                    </button>
+                  </div>
 
                   <div className="dream-preview-meta">
                     <span>
@@ -758,6 +735,27 @@ const hasQuests =
                     </p>
                   </div>
                 )}
+                <div className="dream-preview-actions">
+                  <button
+                    className="dream-edit-button"
+                    onClick={() =>
+                      navigate(`/reves/${selectedDream.id}`)
+                    }
+                    aria-label="Modifier ce rêve"
+                    title="Modifier ce rêve"
+                  >
+                    ✎
+                  </button>
+                  
+                  <button
+                    className="dream-delete-button"
+                    onClick={handleDelete}
+                    aria-label="Supprimer ce rêve"
+                    title="Supprimer ce rêve"
+                  >
+                    🗑
+                  </button>
+                </div>
               </div>
             </div>
           </div>

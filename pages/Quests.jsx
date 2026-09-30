@@ -80,18 +80,19 @@ useEffect(() => {
       className="quest-detail-modal"
       onClick={(e) => e.stopPropagation()}
     >
-      <button
-        className="quest-detail-close"
-        onClick={() => setSelectedQuestId(null)}
-        aria-label="Fermer"
-      >
-        ×
-      </button>
 
       <div className="quest-detail-header">
-        <div>
-          <h2>{selectedQuest.title}</h2>
-
+        <div className='quest-detail-header-infos'>
+          <div className="quest-detail-head">
+            <h2>{selectedQuest.title}</h2>
+            <button
+              className="quest-detail-close"
+              onClick={() => setSelectedQuestId(null)}
+              aria-label="Fermer"
+            >
+              ×
+            </button>
+          </div>
           <span className="quest-id">
             {selectedQuest.source === 'iktomi' &&
               `IK-${selectedQuest.numero}`}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { addCharacter, deleteCharacter, getAllCharacters, getAllDreams} from '../src/db/dreamDatabase'
+import { addCharacter, updateCharacter, deleteCharacter, getAllCharacters, getAllDreams} from '../src/db/dreamDatabase'
 import './Characters.css'
 
 const emptyCharacter = {
@@ -36,6 +36,7 @@ export default function Characters() {
   const navigate = useNavigate()
   const [characters, setCharacters] = useState([])
   const [showForm, setShowForm] = useState(false)
+  const [editingCharacter, setEditingCharacter] = useState(null)
   const [selectedCharacter, setSelectedCharacter] = useState(null)
   const [form, setForm] = useState(emptyCharacter)
   const [search, setSearch] = useState('')
@@ -87,6 +88,7 @@ export default function Characters() {
   function closeForm() {
     setShowForm(false)
     setForm(emptyCharacter)
+    setEditingCharacter(null)
   }
 
   async function handleSubmit(event) {
@@ -107,27 +109,66 @@ export default function Characters() {
     }
 
     try {
-      const id = await addCharacter(character)
+  if (editingCharacter) {
+    await updateCharacter(
+      editingCharacter.id,
+      character,
+    )
 
-      const savedCharacter = {
-        ...character,
-        id,
-      }
+    const updatedCharacter = {
+      ...editingCharacter,
+      ...character,
+    }
 
-      setCharacters((current) =>
-        [...current, savedCharacter].sort((a, b) =>
+    setCharacters((current) =>
+      current
+        .map((item) =>
+          item.id === editingCharacter.id
+            ? updatedCharacter
+            : item,
+        )
+        .sort((a, b) =>
           a.name.localeCompare(b.name, 'fr'),
         ),
-      )
+    )
 
-      setSelectedCharacter(savedCharacter)
-      closeForm()
-    } catch (error) {
-      console.error(
-        'Impossible de créer le personnage :',
-        error,
-      )
+    setSelectedCharacter(updatedCharacter)
+    setEditingCharacter(null)
+    closeForm()
+  } else {
+    const id = await addCharacter(character)
+
+    const savedCharacter = {
+      ...character,
+      id,
     }
+
+    setCharacters((current) =>
+      [...current, savedCharacter].sort((a, b) =>
+        a.name.localeCompare(b.name, 'fr'),
+      ),
+    )
+
+    setSelectedCharacter(savedCharacter)
+    closeForm()
+  }
+} catch (error) {
+  console.error(
+    editingCharacter
+      ? 'Impossible de modifier le personnage :'
+      : 'Impossible de créer le personnage :',
+    error,
+  )
+}
+  }
+  function handleEdit(character) {
+    setEditingCharacter(character)
+    setForm({
+      ...emptyCharacter,
+      ...character,
+    })
+    setSelectedCharacter(null)
+    setShowForm(true)
   }
 
   async function handleDelete(character) {
@@ -310,15 +351,15 @@ console.log(
                 )}
             </div>
 
-            {/*<div className="character-future-section">
-              <span>QUÊTES IKＴOMI</span>
-              <p>
-                Les quêtes associées à ce personnage
-                apparaîtront ici.
-              </p>
-            </div>*/}
-
             <div className="character-actions">
+              <button
+                type="button"
+                className="character-edit-button"
+                onClick={() => handleEdit(selectedCharacter)}
+              >
+                ✎
+              </button>
+
               <button
                 type="button"
                 className="character-delete-button"
@@ -326,7 +367,7 @@ console.log(
                   handleDelete(selectedCharacter)
                 }
               >
-                🗑 Supprimer
+                🗑
               </button>
             </div>
           </div>
