@@ -843,15 +843,19 @@
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    max-height: 92vh;
+    max-height: 75vh;
     padding: 22px;
+    overflow-y: auto;
     overflow-x: hidden;
-    border-radius: 22px 22px 0 0;
+    border-radius: 22px;
     margin: 15px;
   }
   .dream-detail-overlay {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
