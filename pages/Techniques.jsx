@@ -316,21 +316,14 @@ function Techniques() {
                         placeholder="Mes observations, adaptations..."
                       />
                     </label>
-                    <div className="technique-form-actions">
-                      <button
-                        type="button"
-                        className="technique-cancel-button"
-                        onClick={closeForm}
-                      >
-                        Annuler
-                      </button>
+                    
                       <button
                         type="submit"
                         className="technique-save-button"
                       >
                         Enregistrer
                       </button>
-                    </div>
+                    
                   </form>
                 </div>
               )}
