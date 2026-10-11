@@ -19,7 +19,7 @@ const mainNavigation = [
 const tagsNavigation = [
   { icon: '', label: 'Carte onirique', path: '/carte' },
   { icon: '', label: 'Places', path: '/places' },
-  { icon: '', label: 'Objects', path: '/objects' },
+  { icon: '', label: 'Techniques', path: '/techniques' },
   { icon: '', label: 'Other', path: '/other' },
   { label: 'Paramètres', path: '/parametres' },
 ]
@@ -34,7 +34,7 @@ const mobileMoreNavigation = [
   { label: 'Statistiques', path: '/statistiques' },
   { label: 'Carte onirique', path: '/carte' },
   { label: 'Places', path: '/places' },
-  { label: 'Objects', path: '/objects' },
+  { label: 'Techniques', path: '/techniques' },
   { label: 'Other', path: '/other' },
   { label: 'Paramètres', path: '/parametres' },
 ]

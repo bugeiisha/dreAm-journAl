@@ -1,7 +1,7 @@
 import { openDB } from 'idb'
 
 const DB_NAME = 'oneiric-journal'
-const DB_VERSION = 6
+const DB_VERSION = 7
 
 const dbPromise = openDB(DB_NAME, DB_VERSION, {
   upgrade(db) {
@@ -42,6 +42,25 @@ const dbPromise = openDB(DB_NAME, DB_VERSION, {
     
       store.createIndex('updatedAt', 'updatedAt')
       store.createIndex('category', 'category')
+    }
+     if (!db.objectStoreNames.contains('techniques')) {
+      const store = db.createObjectStore('techniques', {
+        keyPath: 'id',
+        autoIncrement: true,
+      })
+
+      store.createIndex('name', 'name')
+    }
+
+    if (!db.objectStoreNames.contains('techniqueAttempts')) {
+      const store = db.createObjectStore('techniqueAttempts', {
+        keyPath: 'id',
+        autoIncrement: true,
+      })
+
+      store.createIndex('techniqueId', 'techniqueId')
+      store.createIndex('date', 'date')
+      store.createIndex('dreamId', 'dreamId')
     }
   },
 })
@@ -218,5 +237,70 @@ export async function updateNote(note) {
 export async function deleteNote(id) {
   return dbPromise.then((db) =>
     db.delete('notes', Number(id)),
+  )
+}
+/* =========================
+   TECHNIQUES
+========================= */
+
+export async function getAllTechniques() {
+  return dbPromise.then((db) =>
+    db.getAllFromIndex('techniques', 'name'),
+  )
+}
+
+export async function addTechnique(technique) {
+  return dbPromise.then((db) =>
+    db.add('techniques', technique),
+  )
+}
+
+export async function updateTechnique(technique) {
+  return dbPromise.then((db) =>
+    db.put('techniques', technique),
+  )
+}
+
+export async function deleteTechnique(id) {
+  return dbPromise.then((db) =>
+    db.delete('techniques', Number(id)),
+  )
+}
+
+/* =========================
+   TENTATIVES DE TECHNIQUES
+========================= */
+
+export async function getAllTechniqueAttempts() {
+  return dbPromise.then((db) =>
+    db.getAllFromIndex('techniqueAttempts', 'date'),
+  )
+}
+
+export async function getTechniqueAttempts(techniqueId) {
+  return dbPromise.then((db) =>
+    db.getAllFromIndex(
+      'techniqueAttempts',
+      'techniqueId',
+      Number(techniqueId),
+    ),
+  )
+}
+
+export async function addTechniqueAttempt(attempt) {
+  return dbPromise.then((db) =>
+    db.add('techniqueAttempts', attempt),
+  )
+}
+
+export async function updateTechniqueAttempt(attempt) {
+  return dbPromise.then((db) =>
+    db.put('techniqueAttempts', attempt),
+  )
+}
+
+export async function deleteTechniqueAttempt(id) {
+  return dbPromise.then((db) =>
+    db.delete('techniqueAttempts', Number(id)),
   )
 }

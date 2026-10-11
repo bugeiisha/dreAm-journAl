@@ -9,6 +9,7 @@ const CATEGORIES = [
   'Techniques',
   'Ressources',
   'À tester',
+  'Notes',
 ]
 
 const emptyNote = {
