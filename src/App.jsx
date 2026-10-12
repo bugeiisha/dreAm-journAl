@@ -12,6 +12,7 @@ import QuestEditor from '../pages/QuestEditor'
 import Characters from '../pages/Characters'
 import Notes from '../pages/Notes'
 import Techniques from '../pages/Techniques'
+import TechniqueAttempts from '../pages/TechniqueAttempts'
 
 function PlaceholderPage({ title }) {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/characters" element={<Characters />} />
           <Route path="/places" element={<PlaceholderPage title="Places" />}/>
           <Route path="/techniques" element={<Techniques />}/>
+          <Route path="/technique-attempts" element={<TechniqueAttempts />} />
           <Route path="/other" element={<PlaceholderPage title="Other" />}/>
           <Route path="/notes" element={<Notes />} />
           <Route path="/parametres" element={<Settings />}/>
