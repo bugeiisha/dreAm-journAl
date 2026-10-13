@@ -131,6 +131,7 @@ useEffect(() => {
                     </span>
                   </div>
                       
+                </div>
                   <div className="quest-status-badge">
                     {questProgress === 'success'
                       ? '🟢 Réussie'
@@ -138,7 +139,6 @@ useEffect(() => {
                       ? '🟣 Tentée'
                       : '🟡 À tester'}
                   </div>
-                </div>
                     
                 <h3>Description</h3>
                 <p>{selectedQuest.description}</p>
@@ -174,9 +174,10 @@ useEffect(() => {
                 <div className="quest-preview-actions">
                   <button
                     className="quest-edit-button"
-                    onClick={() =>
+                    onClick={() => {
+                      setSelectedQuestId(null)
                       setEditingQuest(selectedQuest)
-                    }
+                    }}
                     aria-label="Modifier cette quête"
                     title="Modifier cette quête"
                   >

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, } from 'react-router-dom'
-import { addDream, getAllDreams, getDream, updateDream as updateSavedDream,  getAllQuests, getAllCharacters } from '../src/db/dreamDatabase'
+import { addDream, getAllDreams, getDream, updateDream as updateSavedDream,  getAllQuests, getAllCharacters, getAllTechniques, getAllTechniqueAttempts, addTechniqueAttempt, updateTechniqueAttempt } from '../src/db/dreamDatabase'
 
 import './DreamEditor.css'
 
@@ -94,6 +94,7 @@ function DreamEditor() {
     createInitialDream(),
   )
   const [allQuests, setAllQuests] = useState([])
+
   useEffect(() => {
   async function loadQuests() {
     const quests = await getAllQuests()
@@ -101,6 +102,7 @@ function DreamEditor() {
   }
   loadQuests()
 }, [])
+
   const [isLoading, setIsLoading] = useState(
     isEditing,
   )
@@ -108,6 +110,7 @@ function DreamEditor() {
 
   const [allPRs, setAllPRs] = useState([])
   const [prInput, setPrInput] = useState('')
+
   useEffect(() => {
   async function loadPRs() {
     const prs = await getAllCharacters()
@@ -116,6 +119,11 @@ function DreamEditor() {
 
     loadPRs()
   }, [])
+  const [techniques, setTechniques] = useState([])
+  const [techniqueAttempts, setTechniqueAttempts] = useState([])
+  const [selectedAttemptIds, setSelectedAttemptIds] = useState([])
+  const [newTechniqueAttempts, setNewTechniqueAttempts] = useState([])
+  const [isTechniqueModalOpen, setIsTechniqueModalOpen] = useState(false)
 
   const [tagInputs, setTagInputs] = useState({
     characters: '',
@@ -133,6 +141,18 @@ function DreamEditor() {
     techniques: [],
   })
 
+  const [attemptDraft, setAttemptDraft] = useState({
+    techniqueId: '',
+    date: new Date().toISOString().split('T')[0],
+    durationMinutes: '',
+    conditions: '',
+    description: '',
+    notes: '',
+    techniqueResult: 'completed',
+    dreamResult: 'none',
+  })
+
+  const [isCreatingAttempt, setIsCreatingAttempt] = useState(false)
   /* =========================
      CHARGEMENT DU RÊVE
   ========================= */
@@ -153,12 +173,21 @@ function DreamEditor() {
           ...createInitialDream(),
           ...savedDream,
         })
+        const linkedAttempts = await getAllTechniqueAttempts()
+
+        setSelectedAttemptIds(
+          linkedAttempts
+            .filter(
+              (attempt) =>
+                Number(attempt.dreamId) === Number(dreamId)
+            )
+            .map((attempt) => attempt.id)
+        )
       } catch (error) {
         console.error(
           'Erreur lors du chargement du rêve :',
           error,
         )
-
         navigate('/reves')
       } finally {
         setIsLoading(false)
@@ -190,6 +219,30 @@ function DreamEditor() {
     }
 
     loadTagLibrary()
+  }, [])
+
+  /* =========================
+   CHARGEMENT DES TECHNIQUES
+   ET DES TENTATIVES
+========================= */
+
+  useEffect(() => {
+    async function loadTechniqueData() {
+      try {
+        const savedTechniques = await getAllTechniques()
+        const savedAttempts = await getAllTechniqueAttempts()
+
+        setTechniques(savedTechniques)
+        setTechniqueAttempts(savedAttempts)
+      } catch (error) {
+        console.error(
+          'Erreur lors du chargement des techniques :',
+          error,
+        )
+      }
+    }
+
+    loadTechniqueData()
   }, [])
 
   /* =========================
@@ -353,14 +406,51 @@ function removePR(prId) {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-
     setIsSaving(true)
 
     try {
+      let savedDreamId
+
       if (isEditing) {
         await updateSavedDream(dream)
+        savedDreamId = Number(dreamId)
       } else {
-        await addDream(dream)
+        savedDreamId = await addDream(dream)
+      }
+
+      // Associer les tentatives existantes sélectionnées
+      const selectedIds = selectedAttemptIds.map(Number)
+
+      for (const attempt of techniqueAttempts) {
+        const isLinkedToThisDream =
+          Number(attempt.dreamId) === Number(savedDreamId)
+      
+        const shouldBeLinked = selectedIds.includes(Number(attempt.id))
+      
+        if (shouldBeLinked && !isLinkedToThisDream) {
+          await updateTechniqueAttempt({
+            ...attempt,
+            dreamId: savedDreamId,
+          })
+        } else if (isLinkedToThisDream && !shouldBeLinked) {
+          await updateTechniqueAttempt({
+            ...attempt,
+            dreamId: null,
+          })
+        }
+      }
+
+      // Enregistrer les nouvelles tentatives avec le rêve
+      for (const attempt of newTechniqueAttempts) {
+        await addTechniqueAttempt({
+          ...attempt,
+          techniqueId: Number(attempt.techniqueId),
+          durationMinutes:
+            attempt.durationMinutes === ''
+              ? null
+              : Number(attempt.durationMinutes),
+          dreamId: savedDreamId,
+        })
       }
 
       navigate('/reves')
@@ -757,6 +847,34 @@ const filteredPRs = allPRs.filter((pr) =>
             }
           />
           <TagCategory
+            title="Places"
+            icon="⌂"
+            tags={dream.places || []}
+            inputValue={tagInputs.places}
+            suggestions={tagLibrary.places}
+            onInputChange={(value) =>
+              setTagInputs((current) => ({
+                ...current,
+                places: value,
+              }))
+            }
+            onAdd={() =>
+              addTag('places')
+            }
+            onSelectSuggestion={(tag) =>
+              addTag('places', tag)
+            }
+            onRemove={(tag) =>
+              removeTag('places', tag)
+            }
+            onKeyDown={(event) =>
+              handleTagKeyDown(
+                event,
+                'places',
+              )
+            }
+          />
+          <TagCategory
             title="PR"
             icon="☾"
             tags={
@@ -800,64 +918,7 @@ const filteredPRs = allPRs.filter((pr) =>
             }}
             onKeyDown={() => {}}
           />
-
-          <TagCategory
-            title="Places"
-            icon="⌂"
-            tags={dream.places || []}
-            inputValue={tagInputs.places}
-            suggestions={tagLibrary.places}
-            onInputChange={(value) =>
-              setTagInputs((current) => ({
-                ...current,
-                places: value,
-              }))
-            }
-            onAdd={() =>
-              addTag('places')
-            }
-            onSelectSuggestion={(tag) =>
-              addTag('places', tag)
-            }
-            onRemove={(tag) =>
-              removeTag('places', tag)
-            }
-            onKeyDown={(event) =>
-              handleTagKeyDown(
-                event,
-                'places',
-              )
-            }
-          />
-
-          <TagCategory
-            title="Objects"
-            icon="◇"
-            tags={dream.objects || []}
-            inputValue={tagInputs.objects}
-            suggestions={tagLibrary.objects}
-            onInputChange={(value) =>
-              setTagInputs((current) => ({
-                ...current,
-                objects: value,
-              }))
-            }
-            onAdd={() =>
-              addTag('objects')
-            }
-            onSelectSuggestion={(tag) =>
-              addTag('objects', tag)
-            }
-            onRemove={(tag) =>
-              removeTag('objects', tag)
-            }
-            onKeyDown={(event) =>
-              handleTagKeyDown(
-                event,
-                'objects',
-              )
-            }
-          />
+          
 
           <TagCategory
             title="Other"
@@ -885,32 +946,79 @@ const filteredPRs = allPRs.filter((pr) =>
               )
             }
           />
-          <TagCategory
-            title="Techniques"
-            icon="✦"
-            tags={dream.techniques || []}
-            inputValue={tagInputs.techniques}
-            suggestions={tagLibrary.techniques}
-            onInputChange={(value) =>
-              setTagInputs((current) => ({
-                ...current,
-                techniques: value,
-              }))
-            }
-            onAdd={() => addTag('techniques')}
-            onSelectSuggestion={(tag) =>
-              addTag('techniques', tag)
-            }
-            onRemove={(tag) =>
-              removeTag('techniques', tag)
-            }
-            onKeyDown={(event) =>
-              handleTagKeyDown(
-                event,
-                'techniques',
-              )
-            }
-          />
+        </section>
+        <section className="form-section">
+          <h3 className='form-label'>Techniques</h3>
+
+          <button
+            type="button"
+            className="primary-button"
+            id='tentatives-btn'
+            onClick={() => setIsTechniqueModalOpen(true)}
+          >
+            Gérer les tentatives
+          </button>
+
+          {selectedAttemptIds.map((id) => {
+  const attempt = techniqueAttempts.find((item) => item.id === id);
+  if (!attempt) return null;
+
+  const technique = techniques.find(
+    (item) => item.id === Number(attempt.techniqueId)
+  );
+
+  return (
+    <div key={id} className="selected-technique-card">
+      <div className="selected-technique-info">
+        <span className="selected-technique-name">
+          {technique?.name || 'Technique inconnue'}
+        </span>
+        <span className="selected-technique-date">{attempt.date}</span>
+      </div>
+
+      <button
+        type="button"
+        className="remove-technique-button"
+        onClick={() =>
+          setSelectedAttemptIds((current) =>
+            current.filter((itemId) => itemId !== id)
+          )
+        }
+      >
+        Retirer
+      </button>
+    </div>
+  );
+})}
+
+{newTechniqueAttempts.map((attempt, index) => {
+  const technique = techniques.find(
+    (item) => item.id === Number(attempt.techniqueId)
+  );
+
+  return (
+    <div key={index} className="selected-technique-card">
+      <div className="selected-technique-info">
+        <span className="selected-technique-name">
+          {technique?.name || 'Nouvelle tentative'}
+        </span>
+        <span className="selected-technique-date">{attempt.date}</span>
+      </div>
+
+      <button
+        type="button"
+        className="remove-technique-button"
+        onClick={() =>
+          setNewTechniqueAttempts((current) =>
+            current.filter((_, i) => i !== index)
+          )
+        }
+      >
+        Retirer
+      </button>
+    </div>
+  );
+})}
         </section>
         {/* =========================
             QUÊTES LIÉES
@@ -1058,6 +1166,265 @@ const filteredPRs = allPRs.filter((pr) =>
           </button>
         </div>
       </form>
+      {isTechniqueModalOpen && (
+        <div className="technique-modal-backdrop">
+          <div
+            className="technique-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="technique-modal-title"
+          >
+            <div className="technique-modal-header">
+              <h3 id="technique-modal-title">
+                Gérer les tentatives
+              </h3>
+
+              <button
+                type="button"
+                className='add-tag-button'
+                onClick={() => setIsTechniqueModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <button
+              type="button"
+              className='primary-button'
+              id='tentatives-btn'
+              onClick={() => setIsCreatingAttempt((current) => !current)}
+            >
+              {isCreatingAttempt
+                ? 'Annuler la création'
+                : '+ Nouvelle tentative'}
+            </button>
+              
+            {isCreatingAttempt && (
+              <div className="technique-attempt-form">
+                <h4>Nouvelle tentative</h4>
+            
+                <label>
+                  Technique
+                  <select
+                    value={attemptDraft.techniqueId}
+                    onChange={(event) =>
+                      setAttemptDraft((current) => ({
+                        ...current,
+                        techniqueId: event.target.value,
+                      }))
+                    }
+                    required
+                  >
+                    <option value="">Choisir une technique</option>
+                  
+                    {techniques.map((technique) => (
+                      <option
+                        key={technique.id}
+                        value={technique.id}
+                      >
+                        {technique.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                  
+                <label>
+                  Date
+                  <input
+                    type="date"
+                    value={attemptDraft.date}
+                    onChange={(event) =>
+                      setAttemptDraft((current) => ({
+                        ...current,
+                        date: event.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </label>
+                  
+                <label>
+                  Durée (minutes)
+                  <input
+                    type="number"
+                    min="0"
+                    value={attemptDraft.durationMinutes}
+                    onChange={(event) =>
+                      setAttemptDraft((current) => ({
+                        ...current,
+                        durationMinutes: event.target.value,
+                      }))
+                    }
+                  />
+                </label>
+                  
+                <label>
+                  Conditions
+                  <textarea
+                    value={attemptDraft.conditions}
+                    onChange={(event) =>
+                      setAttemptDraft((current) => ({
+                        ...current,
+                        conditions: event.target.value,
+                      }))
+                    }
+                  />
+                </label>
+                  
+                <label>
+                  Description
+                  <textarea
+                    value={attemptDraft.description}
+                    onChange={(event) =>
+                      setAttemptDraft((current) => ({
+                        ...current,
+                        description: event.target.value,
+                      }))
+                    }
+                  />
+                </label>
+                  
+                <label>
+                  Notes
+                  <textarea
+                    value={attemptDraft.notes}
+                    onChange={(event) =>
+                      setAttemptDraft((current) => ({
+                        ...current,
+                        notes: event.target.value,
+                      }))
+                    }
+                  />
+                </label>
+                  
+                <label>
+                  Résultat de la technique
+                  <select
+                    value={attemptDraft.techniqueResult}
+                    onChange={(event) =>
+                      setAttemptDraft((current) => ({
+                        ...current,
+                        techniqueResult: event.target.value,
+                      }))
+                    }
+                  >
+                    <option value="completed">Terminée</option>
+                    <option value="partial">Partielle</option>
+                    <option value="interrupted">Interrompue</option>
+                    <option value="not-done">Non réalisée</option>
+                  </select>
+                </label>
+                  
+                <label>
+                  Résultat sur le rêve
+                  <select
+                    value={attemptDraft.dreamResult}
+                    onChange={(event) =>
+                      setAttemptDraft((current) => ({
+                        ...current,
+                        dreamResult: event.target.value,
+                      }))
+                    }
+                  >
+                    <option value="none">Aucun résultat</option>
+                    <option value="rl">Rêve lucide</option>
+                    <option value="rn">Rêve non lucide</option>
+                    <option value="no-dream">Aucun rêve mémorisé</option>
+                    <option value="other">Autre</option>
+                  </select>
+                </label>
+                  
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!attemptDraft.techniqueId || !attemptDraft.date) {
+                      alert('Choisis une technique et une date.')
+                      return
+                    }
+                  
+                    setNewTechniqueAttempts((current) => [
+                      ...current,
+                      { ...attemptDraft },
+                    ])
+                  
+                    setAttemptDraft({
+                      techniqueId: '',
+                      date: new Date().toISOString().split('T')[0],
+                      durationMinutes: '',
+                      conditions: '',
+                      description: '',
+                      notes: '',
+                      techniqueResult: 'completed',
+                      dreamResult: 'none',
+                    })
+                  
+                    setIsCreatingAttempt(false)
+                  }}
+                >
+                  Ajouter à ce rêve
+                </button>
+              </div>
+            )}
+            <h4>Tentatives existantes</h4>
+
+            {(() => {
+              const availableAttempts = techniqueAttempts.filter(
+                (attempt) =>
+                  !attempt.dreamId ||
+                  Number(attempt.dreamId) === Number(dreamId)
+              );
+            
+              if (availableAttempts.length === 0) {
+                return <p className="no-attempts">Aucune tentative disponible.</p>;
+              }
+            
+              return (
+                <div className="technique-attempts-list">
+                  {availableAttempts.map((attempt) => {
+                    const technique = techniques.find(
+                      (item) => item.id === Number(attempt.techniqueId)
+                    );
+                  
+                    return (
+                      <label key={attempt.id} className="technique-attempt-item">
+                        <input
+                          type="checkbox"
+                          checked={selectedAttemptIds.includes(attempt.id)}
+                          onChange={(event) => {
+                            setSelectedAttemptIds((current) =>
+                              event.target.checked
+                                ? [...current, attempt.id]
+                                : current.filter((id) => id !== attempt.id)
+                            );
+                          }}
+                        />
+                        <span className="technique-attempt-info">
+                          <span className="technique-attempt-name">
+                            {technique?.name || 'Technique inconnue'}
+                          </span>
+                          <span className="technique-attempt-date">
+                            {attempt.date}
+                          </span>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
+            <div className="technique-modal-actions">
+              <button
+                type="button"
+                className='primary-button'
+                id='tentatives-btn'
+                onClick={() => setIsTechniqueModalOpen(false)}
+              >
+                Terminer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

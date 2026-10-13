@@ -13,6 +13,7 @@ import Characters from '../pages/Characters'
 import Notes from '../pages/Notes'
 import Techniques from '../pages/Techniques'
 import TechniqueAttempts from '../pages/TechniqueAttempts'
+import TechniqueAttemptEditor from '../pages/TechniqueAttemptEditor'
 
 function PlaceholderPage({ title }) {
   return (
@@ -43,6 +44,7 @@ function App() {
           <Route path="/places" element={<PlaceholderPage title="Places" />}/>
           <Route path="/techniques" element={<Techniques />}/>
           <Route path="/technique-attempts" element={<TechniqueAttempts />} />
+          <Route path="/technique-attempts/:attemptId" element={<TechniqueAttemptEditor />}/>
           <Route path="/other" element={<PlaceholderPage title="Other" />}/>
           <Route path="/notes" element={<Notes />} />
           <Route path="/parametres" element={<Settings />}/>

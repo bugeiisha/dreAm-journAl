@@ -375,10 +375,6 @@
   font-size: 11px;
 }
 
-.quest-detail-modal .quest-status-badge {
-  margin-top: 12px;
-}
-
 .quest-detail-modal h3 {
   margin: 24px 0 9px;
   color: var(--color-text);
