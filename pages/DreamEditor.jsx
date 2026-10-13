@@ -1335,6 +1335,7 @@ const filteredPRs = allPRs.filter((pr) =>
                   
                 <button
                   type="button"
+                  className='primary-button'
                   onClick={() => {
                     if (!attemptDraft.techniqueId || !attemptDraft.date) {
                       alert('Choisis une technique et une date.')
@@ -1378,7 +1379,7 @@ const filteredPRs = allPRs.filter((pr) =>
               }
             
               return (
-                <div className="technique-attempts-list">
+                <div className="technique-attempts-list-dream">
                   {availableAttempts.map((attempt) => {
                     const technique = techniques.find(
                       (item) => item.id === Number(attempt.techniqueId)

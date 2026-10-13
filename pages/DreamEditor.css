@@ -805,6 +805,13 @@
   background: var(--color-danger);
   color: var(--color-text);
 }
+.technique-attempts-list-dream{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+  align-items: start;
+}
 /* =========================
    RESPONSIVE
 ========================= */
@@ -836,12 +843,8 @@
   #tentatives-btn{
     width: 100%;
   }
-  .technique-attempts-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
-    margin: 16px 0;
-    align-items: start;
-  }
+  .technique-attempts-list-dream{
+    grid-template-columns: repeat(2, 1fr);
+}
 }
 

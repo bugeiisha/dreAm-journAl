@@ -294,7 +294,6 @@ function Techniques() {
                     <label>
                       Description
                       <textarea
-                        rows={3}
                         value={form.description}
                         onChange={(e) =>
                           setForm({
@@ -308,7 +307,6 @@ function Techniques() {
                     <label>
                       Mes notes
                       <textarea
-                        rows={3}
                         value={form.notes}
                         onChange={(e) =>
                           setForm({ ...form, notes: e.target.value })
