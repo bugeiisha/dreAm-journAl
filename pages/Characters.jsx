@@ -109,57 +109,53 @@ export default function Characters() {
     }
 
     try {
-  if (editingCharacter) {
-    await updateCharacter(
-      editingCharacter.id,
-      character,
-    )
-
-    const updatedCharacter = {
+      if (editingCharacter) {
+        const updatedCharacter = {
       ...editingCharacter,
       ...character,
-    }
-
-    setCharacters((current) =>
-      current
-        .map((item) =>
-          item.id === editingCharacter.id
-            ? updatedCharacter
-            : item,
+      }
+        await updateCharacter(updatedCharacter)
+        
+        setCharacters((current) =>
+          current
+            .map((item) =>
+              item.id === editingCharacter.id
+                ? updatedCharacter
+                : item,
+            )
+            .sort((a, b) =>
+              a.name.localeCompare(b.name, 'fr'),
+            ),
         )
-        .sort((a, b) =>
-          a.name.localeCompare(b.name, 'fr'),
-        ),
-    )
-
-    setSelectedCharacter(updatedCharacter)
-    setEditingCharacter(null)
-    closeForm()
-  } else {
-    const id = await addCharacter(character)
-
-    const savedCharacter = {
-      ...character,
-      id,
+      
+        setSelectedCharacter(updatedCharacter)
+        setEditingCharacter(null)
+        closeForm()
+      } else {
+        const id = await addCharacter(character)
+      
+        const savedCharacter = {
+          ...character,
+          id,
+        }
+      
+        setCharacters((current) =>
+          [...current, savedCharacter].sort((a, b) =>
+            a.name.localeCompare(b.name, 'fr'),
+          ),
+        )
+      
+        setSelectedCharacter(savedCharacter)
+        closeForm()
+      }
+    } catch (error) {
+      console.error(
+        editingCharacter
+          ? 'Impossible de modifier le personnage :'
+          : 'Impossible de créer le personnage :',
+        error,
+      )
     }
-
-    setCharacters((current) =>
-      [...current, savedCharacter].sort((a, b) =>
-        a.name.localeCompare(b.name, 'fr'),
-      ),
-    )
-
-    setSelectedCharacter(savedCharacter)
-    closeForm()
-  }
-} catch (error) {
-  console.error(
-    editingCharacter
-      ? 'Impossible de modifier le personnage :'
-      : 'Impossible de créer le personnage :',
-    error,
-  )
-}
   }
   function handleEdit(character) {
     setEditingCharacter(character)

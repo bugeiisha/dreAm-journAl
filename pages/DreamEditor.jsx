@@ -1052,7 +1052,9 @@ const filteredPRs = allPRs.filter((pr) =>
                     <span>
                       {quest.source === 'iktomi'
                         ? `IK-${quest.numero}`
-                        : `P-${quest.id}`}
+                        : quest.source === 'monthly'
+                          ? `QM-${quest.numero}`
+                          : `P-${quest.id}`}
                       {' - '}
                       {quest.title}
                     </span>
@@ -1373,7 +1375,6 @@ const filteredPRs = allPRs.filter((pr) =>
                   !attempt.dreamId ||
                   Number(attempt.dreamId) === Number(dreamId)
               );
-            
               if (availableAttempts.length === 0) {
                 return <p className="no-attempts">Aucune tentative disponible.</p>;
               }

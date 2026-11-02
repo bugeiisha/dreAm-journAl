@@ -17,7 +17,7 @@ function QuestEditor({
   const isEditing = Boolean(questId)
   const navigate = useNavigate()
   console.log('questId', questId)
-console.log('isEditing', isEditing)
+  console.log('isEditing', isEditing)
   const [source, setSource] = useState('iktomi')
   const [numero, setNumero] = useState('')
   const [title, setTitle] = useState('')
@@ -41,12 +41,12 @@ console.log('isEditing', isEditing)
       })
     } else {
       console.log('Création', {
-  source,
-  numero,
-  title,
-  description,
-  status,
-})
+        source,
+        numero,
+        title,
+        description,
+        status,
+      })
       await addQuest({
         source,
         numero:
@@ -211,6 +211,10 @@ console.log('isEditing', isEditing)
         >
           <option value="pending">
             À tester
+          </option>
+          
+          <option value="attempted">
+            Tentée
           </option>
 
           <option value="success">
