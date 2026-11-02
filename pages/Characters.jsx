@@ -6,6 +6,7 @@ import './Characters.css'
 const emptyCharacter = {
   name: '',
   nickname: '',
+  gender: '',
   apparentAge: '',
   job: '',
   appearance: '',
@@ -102,6 +103,7 @@ export default function Characters() {
       ...form,
       name: form.name.trim(),
       nickname: form.nickname.trim(),
+      gender: form.gender,
       apparentAge: form.apparentAge.trim(),
       job: form.job.trim(),
       appearance: form.appearance.trim(),
@@ -271,6 +273,19 @@ console.log(
             </div>
 
             <div className="character-fields">
+              {selectedCharacter.gender && (
+                <div className="character-field">
+                  <span>Genre apparent</span>
+                  <strong>
+                    {selectedCharacter.gender === 'homme'
+                      ? 'Homme'
+                      : selectedCharacter.gender === 'femme'
+                        ? 'Femme'
+                        : 'Autre'}
+                  </strong>
+                </div>
+              )}
+
               {selectedCharacter.apparentAge && (
                 <div className="character-field">
                   <span>Âge apparent</span>
@@ -558,6 +573,21 @@ console.log(
                   autoFocus
                   required
                 />
+              </label>
+
+              <label>
+                <span>Genre apparent</span>
+
+                <select
+                  name="gender"
+                  value={form.gender}
+                  onChange={handleChange}
+                >
+                  <option value="">Non renseigné</option>
+                  <option value="homme">Homme</option>
+                  <option value="femme">Femme</option>
+                  <option value="autre">Autre</option>
+                </select>
               </label>
 
               <label>

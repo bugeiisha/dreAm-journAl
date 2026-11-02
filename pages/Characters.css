@@ -338,7 +338,8 @@
 }
 
 .character-form-body input,
-.character-form-body textarea {
+.character-form-body textarea,
+.character-form-body select {
   width: 100%;
   box-sizing: border-box;
   padding: 11px 13px;
@@ -352,18 +353,21 @@
   resize: vertical;
 }
 
-.character-form-body input {
+.character-form-body input,
+.character-form-body select {
   min-height: 42px;
 }
 
 .character-form-body input:focus,
-.character-form-body textarea:focus {
+.character-form-body textarea:focus,
+.character-form-body select:focus {
   border-color: var(--color-accent);
   background: var(--color-surface-light);
 }
 
 .character-form-body input::placeholder,
-.character-form-body textarea::placeholder {
+.character-form-body textarea::placeholder,
+.character-form-body select::placeholder {
   color: var(--color-text-secondary);
 }
 
