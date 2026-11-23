@@ -24,21 +24,62 @@ function createInitialDream() {
     other: [],
     techniques: [],
     techniqueTracking: {
-      ssild: {
-        preparations: {
-          as: false,
-          wbtb: false,
-        },
-        completed: null,
-        fastCycles: 0,
-        slowCycles: 0,
-        result: '',
-      },
+      ssildAttempts: [],
     },
     linkedQuests: [],
     notes: '',
     image: null,
   }
+}
+
+function createSSILDAttempt() {
+  return {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    preparations: {
+      as: false,
+      wbtb: false,
+    },
+    completed: null,
+    fastCycles: 0,
+    slowCycles: 0,
+    results: [],
+  }
+}
+
+function getSSILDAttempts(savedDream) {
+  const tracking = savedDream.techniqueTracking || {}
+
+  // Les nouvelles données existent déjà
+  if (Array.isArray(tracking.ssildAttempts)) {
+    return tracking.ssildAttempts
+  }
+
+  // Conversion de l'ancien format SSILD
+  const old = tracking.ssild
+
+  if (!old) return []
+
+  const hasData =
+    old.preparations?.as ||
+    old.preparations?.wbtb ||
+    old.completed !== null ||
+    old.fastCycles > 0 ||
+    old.slowCycles > 0 ||
+    Boolean(old.result)
+
+  if (!hasData) return []
+
+  return [{
+    id: `${Date.now()}-legacy`,
+    preparations: {
+      as: old.preparations?.as || false,
+      wbtb: old.preparations?.wbtb || false,
+    },
+    completed: old.completed ?? null,
+    fastCycles: old.fastCycles ?? 0,
+    slowCycles: old.slowCycles ?? 0,
+    results: old.result ? [old.result] : [],
+  }]
 }
 
 /* =========================
@@ -170,19 +211,12 @@ function DreamEditor() {
           ...initialDream,
           ...savedDream,
           techniqueTracking: {
-            ...initialDream.techniqueTracking,
             ...(savedDream.techniqueTracking || {}),
-            ssild: {
-              ...initialDream.techniqueTracking.ssild,
-              ...(savedDream.techniqueTracking?.ssild || {}),
-              preparations: {
-                ...initialDream.techniqueTracking.ssild.preparations,
-                ...(savedDream.techniqueTracking?.ssild?.preparations || {}),
-              },
-            },
+            ssildAttempts: getSSILDAttempts(savedDream),
           },
         })
-        if (savedDream.techniqueTracking?.ssild) {
+
+        if (getSSILDAttempts(savedDream).length > 0) {
           setActiveTechnique('ssild')
         }
       } catch (error) {
@@ -238,34 +272,83 @@ function DreamEditor() {
       [field]: value,
     }))
   }
-  const updateSSILD = (field, value) => {
-    setDream((current) => ({
-      ...current,
-      techniqueTracking: {
-        ...current.techniqueTracking,
-        ssild: {
-          ...current.techniqueTracking.ssild,
-          [field]: value,
-        },
-      },
-    }))
-  }
+  const addSSILDAttempt = () => {
+  setDream((current) => ({
+    ...current,
+    techniqueTracking: {
+      ...current.techniqueTracking,
+      ssildAttempts: [
+        ...(current.techniqueTracking.ssildAttempts || []),
+        createSSILDAttempt(),
+      ],
+    },
+  }))
+}
 
-  const toggleSSILDPreparation = (preparation) => {
-    setDream((current) => ({
-      ...current,
-      techniqueTracking: {
-        ...current.techniqueTracking,
-        ssild: {
-          ...current.techniqueTracking.ssild,
-          preparations: {
-            ...current.techniqueTracking.ssild.preparations,
-            [preparation]: !current.techniqueTracking.ssild.preparations[preparation],
-          },
-        },
-      },
-    }))
-  }
+const updateSSILDAttempt = (attemptId, field, value) => {
+  setDream((current) => ({
+    ...current,
+    techniqueTracking: {
+      ...current.techniqueTracking,
+      ssildAttempts: current.techniqueTracking.ssildAttempts.map((attempt) =>
+        attempt.id === attemptId
+          ? { ...attempt, [field]: value }
+          : attempt
+      ),
+    },
+  }))
+}
+
+const toggleSSILDAttemptPreparation = (attemptId, preparation) => {
+  setDream((current) => ({
+    ...current,
+    techniqueTracking: {
+      ...current.techniqueTracking,
+      ssildAttempts: current.techniqueTracking.ssildAttempts.map((attempt) =>
+        attempt.id === attemptId
+          ? {
+              ...attempt,
+              preparations: {
+                ...attempt.preparations,
+                [preparation]: !attempt.preparations[preparation],
+              },
+            }
+          : attempt
+      ),
+    },
+  }))
+}
+
+const toggleSSILDAttemptResult = (attemptId, result) => {
+  setDream((current) => ({
+    ...current,
+    techniqueTracking: {
+      ...current.techniqueTracking,
+      ssildAttempts: current.techniqueTracking.ssildAttempts.map((attempt) =>
+        attempt.id === attemptId
+          ? {
+              ...attempt,
+              results: attempt.results.includes(result)
+                ? attempt.results.filter((item) => item !== result)
+                : [...attempt.results, result],
+            }
+          : attempt
+      ),
+    },
+  }))
+}
+
+const removeSSILDAttempt = (attemptId) => {
+  setDream((current) => ({
+    ...current,
+    techniqueTracking: {
+      ...current.techniqueTracking,
+      ssildAttempts: current.techniqueTracking.ssildAttempts.filter(
+        (attempt) => attempt.id !== attemptId
+      ),
+    },
+  }))
+}
 
   const toggleLucid = () => {
   setDream((currentDream) => {
@@ -951,107 +1034,164 @@ const filteredPRs = allPRs.filter((pr) =>
           {activeTechnique === 'ssild' && (
             <div className="technique-form">
               <h4>SSILD</h4>
-          
-              <div className="ssild-preparations">
-                <button
-                  type="button"
-                  className={`ssild-option ${dream.techniqueTracking.ssild.preparations.as ? 'active' : ''}`}
-                  onClick={() => toggleSSILDPreparation('as')}
-                >
-                  AS
-                </button>
-          
-                <button
-                  type="button"
-                  className={`ssild-option ${dream.techniqueTracking.ssild.preparations.wbtb ? 'active' : ''}`}
-                  onClick={() => toggleSSILDPreparation('wbtb')}
-                >
-                  WBTB
-                </button>
-              </div>
-          
-              <label className="form-label">
-                Menée à terme ?
-              </label>
-          
-              <div className="ssild-completed-options">
-                <button
-                  type="button"
-                  className={`ssild-option ${dream.techniqueTracking.ssild.completed === true ? 'active' : ''}`}
-                  onClick={() => updateSSILD('completed', true)}
-                >
-                  Oui
-                </button>
-          
-                <button
-                  type="button"
-                  className={`ssild-option ${dream.techniqueTracking.ssild.completed === false ? 'active' : ''}`}
-                  onClick={() => updateSSILD('completed', false)}
-                >
-                  Non
-                </button>
-              </div>
-              <div className="ssild-cycles">
-                <h4>Cycles</h4>
 
-                <div className="ssild-cycle-row">
-                  <label htmlFor="ssild-fast-cycles">
-                    Cycles rapides
-                  </label>
+              {(dream.techniqueTracking.ssildAttempts || []).map(
+                (attempt, index) => (
+                  <div className="ssild-attempt" key={attempt.id}>
+                    <div className="ssild-attempt-header">
+                      <h4>Tentative {index + 1}</h4>
+                
+                      <button
+                        type="button"
+                        className="ssild-remove-button"
+                        onClick={() => removeSSILDAttempt(attempt.id)}
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                
+                    <div className="ssild-preparations">
+                      <button
+                        type="button"
+                        className={`ssild-option ${attempt.preparations.as ? 'active' : ''}`}
+                        onClick={() =>
+                          toggleSSILDAttemptPreparation(attempt.id, 'as')
+                        }
+                      >
+                        AS
+                      </button>
+                      
+                      <button
+                        type="button"
+                        className={`ssild-option ${attempt.preparations.wbtb ? 'active' : ''}`}
+                        onClick={() =>
+                          toggleSSILDAttemptPreparation(attempt.id, 'wbtb')
+                        }
+                      >
+                        WBTB
+                      </button>
+                    </div>
+                      
+                    <label className="form-label">
+                      Menée à terme ?
+                    </label>
+                      
+                    <div className="ssild-completed-options">
+                      <button
+                        type="button"
+                        className={`ssild-option ${attempt.completed === true ? 'active' : ''}`}
+                        onClick={() =>
+                          updateSSILDAttempt(attempt.id, 'completed', true)
+                        }
+                      >
+                        Oui
+                      </button>
+                      
+                      <button
+                        type="button"
+                        className={`ssild-option ${attempt.completed === false ? 'active' : ''}`}
+                        onClick={() =>
+                          updateSSILDAttempt(attempt.id, 'completed', false)
+                        }
+                      >
+                        Non
+                      </button>
+                    </div>
+                      
+                    <div className="ssild-cycles">
+                      <h4>Cycles</h4>
+                      
+                      <div className="ssild-cycle-row">
+                        <label htmlFor={`ssild-fast-${attempt.id}`}>
+                          Cycles rapides
+                        </label>
+                      
+                        <select
+                          id={`ssild-fast-${attempt.id}`}
+                          value={attempt.fastCycles}
+                          onChange={(event) =>
+                            updateSSILDAttempt(
+                              attempt.id,
+                              'fastCycles',
+                              Number(event.target.value)
+                            )
+                          }
+                        >
+                          {[0, 1, 2, 3, 4].map((value) => (
+                            <option key={value} value={value}>
+                              {value}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                        
+                      <div className="ssild-cycle-row">
+                        <label htmlFor={`ssild-slow-${attempt.id}`}>
+                          Cycles lents
+                        </label>
+                        
+                        <select
+                          id={`ssild-slow-${attempt.id}`}
+                          value={attempt.slowCycles}
+                          onChange={(event) =>
+                            updateSSILDAttempt(
+                              attempt.id,
+                              'slowCycles',
+                              Number(event.target.value)
+                            )
+                          }
+                        >
+                          {[0, 1, 2, 3, 4, 5].map((value) => (
+                            <option key={value} value={value}>
+                              {value}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                        
+                    <div className="ssild-result">
+                      <label className="form-label">
+                        Résultat(s)
+                      </label>
+                        
+                      <div className="ssild-results-options">
+                        {[
+                          { value: 'rl', label: 'RL' },
+                          { value: 'rn', label: 'RN' },
+                          { value: 'fe', label: 'FE' },
+                          { value: 'none', label: 'Rien' },
+                          { value: 'false-sleep', label: 'Faux endormissement' },
+                        ].map((result) => (
+                          <button
+                            key={result.value}
+                            type="button"
+                            className={`ssild-option ${
+                              attempt.results.includes(result.value) ? 'active' : ''
+                            }`}
+                            onClick={() =>
+                              toggleSSILDAttemptResult(
+                                attempt.id,
+                                result.value
+                              )
+                            }
+                          >
+                            {result.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )
+              )}
 
-                  <select
-                    id="ssild-fast-cycles"
-                    value={dream.techniqueTracking.ssild.fastCycles}
-                    onChange={(event) =>
-                      updateSSILD('fastCycles', Number(event.target.value))
-                    }
-                  >
-                    {[0, 1, 2, 3, 4].map((value) => (
-                      <option key={value} value={value}>
-                        {value}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                  
-                <div className="ssild-cycle-row">
-                  <label htmlFor="ssild-slow-cycles">
-                    Cycles lents
-                  </label>
-                  
-                  <select
-                    id="ssild-slow-cycles"
-                    value={dream.techniqueTracking.ssild.slowCycles}
-                    onChange={(event) =>
-                      updateSSILD('slowCycles', Number(event.target.value))
-                    }
-                  >
-                    {[0, 1, 2, 3, 4, 5].map((value) => (
-                      <option key={value} value={value}>
-                        {value}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="ssild-result">
-                <label className="form-label" htmlFor="ssild-result">
-                  Résultat
-                </label>
-
-                <select
-                  id="ssild-result"
-                  value={dream.techniqueTracking.ssild.result}
-                  onChange={(event) => updateSSILD('result', event.target.value)}
-                >
-                  <option value="">Choisir un résultat</option>
-                  <option value="rl">RL</option>
-                  <option value="rn">RN</option>
-                  <option value="fe">FE</option>
-                  <option value="false-sleep">Faux endormissement</option>
-                  <option value="none">Rien</option>
-                </select>
-              </div>
+              <button
+                type="button"
+                className="ssild-add-button"
+                onClick={addSSILDAttempt}
+              >
+                + Ajouter une tentative
+              </button>
             </div>
           )}
 

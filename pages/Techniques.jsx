@@ -70,7 +70,6 @@ function Techniques() {
     const currentMonth = now.getMonth()
 
     const months = []
-
     const start = new Date(2026, 6, 1)
 
     for (
@@ -136,22 +135,15 @@ function Techniques() {
       (tracking) => tracking.preparations?.wbtb,
     )
 
-    const results = [
-      { key: 'RL', label: 'Rêve lucide' },
-      { key: 'RN', label: 'Rêve non lucide' },
-      { key: 'FE', label: 'Faux éveil' },
-      { key: 'Faux endormissement', label: 'Faux endormissement' },
-      { key: 'Rien', label: 'Aucun résultat' },
-    ].map((result) => ({
-      ...result,
-      count: attempts.filter(
-        (tracking) => tracking.result === result.key,
-      ).length,
-    }))
+    // Tentatives ayant abouti à un rêve lucide
+    const successfulAttempts = attempts.filter(
+      (tracking) => tracking.result === 'rl',
+    )
 
+    // Cycles uniquement des tentatives ayant abouti à un RL
     const cycleStats = {}
 
-    attempts.forEach((tracking) => {
+    successfulAttempts.forEach((tracking) => {
       const key = `${tracking.fastCycles ?? 0}-${tracking.slowCycles ?? 0}`
       cycleStats[key] = (cycleStats[key] || 0) + 1
     })
@@ -169,9 +161,9 @@ function Techniques() {
       total: attempts.length,
       completed: completed.length,
       notCompleted: notCompleted.length,
+      successful: successfulAttempts.length,
       withAS: withAS.length,
       withWBTB: withWBTB.length,
-      results,
       cycles,
     }
   }, [dreams])
@@ -303,6 +295,12 @@ function Techniques() {
                   label="Non terminées"
                   value={ssildStats.notCompleted}
                 />
+
+                <StatCard
+                  label="Ayant abouti à un RL"
+                  value={ssildStats.successful}
+                  description="Résultat RL uniquement"
+                />
               </div>
 
               <h3 className="techniques-section-title">
@@ -322,23 +320,7 @@ function Techniques() {
               </div>
 
               <h3 className="techniques-section-title">
-                Résultats
-              </h3>
-
-              <div className="techniques-results-list">
-                {ssildStats.results.map((result) => (
-                  <div
-                    className="techniques-result-row"
-                    key={result.key}
-                  >
-                    <span>{result.label}</span>
-                    <strong>{result.count}</strong>
-                  </div>
-                ))}
-              </div>
-
-              <h3 className="techniques-section-title">
-                Cycles effectués
+                Cycles ayant abouti à un RL
               </h3>
 
               <div className="techniques-results-list">
@@ -356,7 +338,7 @@ function Techniques() {
                   ))
                 ) : (
                   <p className="techniques-empty">
-                    Aucune donnée sur les cycles pour le moment.
+                    Aucun RL obtenu avec SSILD pour le moment.
                   </p>
                 )}
               </div>

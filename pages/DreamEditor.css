@@ -703,7 +703,79 @@
   color: var(--color-text-secondary);
   font-size: 12px;
 }
+/* =========================
+   TENTATIVES SSILD
+========================= */
 
+.ssild-attempt {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(168, 184, 216, 0.035);
+  border: 1px solid rgba(214, 180, 138, 0.16);
+  border-radius: 13px;
+}
+
+.ssild-attempt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(168, 184, 216, 0.10);
+}
+
+.ssild-attempt-header h4 {
+  color: var(--color-accent);
+  font-size: 13px;
+}
+
+.ssild-remove-button {
+  padding: 6px 10px;
+  color: var(--color-danger);
+  font: inherit;
+  font-size: 11px;
+  background: rgba(185, 120, 120, 0.08);
+  border: 1px solid rgba(185, 120, 120, 0.18);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ssild-remove-button:hover {
+  background: rgba(185, 120, 120, 0.16);
+}
+
+.ssild-results-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ssild-results-options .ssild-option {
+  flex: 0 1 auto;
+  min-width: 65px;
+}
+
+.ssild-add-button {
+  width: 100%;
+  padding: 13px;
+  color: var(--color-accent);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(214, 180, 138, 0.06);
+  border: 1px dashed rgba(214, 180, 138, 0.35);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ssild-add-button:hover {
+  background: rgba(214, 180, 138, 0.12);
+  border-color: rgba(214, 180, 138, 0.55);
+}
 /* OPTIONS AS / WBTB / OUI / NON */
 
 .ssild-preparations,
@@ -832,5 +904,16 @@
   .ssild-cycle-row {
     gap: 10px;
   }
+  .ssild-attempt {
+  padding: 14px;
+}
+
+.ssild-results-options {
+  gap: 7px;
+}
+
+.ssild-results-options .ssild-option {
+  flex: 1 1 calc(50% - 7px);
+}
 }
 
