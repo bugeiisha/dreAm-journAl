@@ -643,174 +643,168 @@
   min-width: 0;
   box-sizing: border-box;
 }
-.technique-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(20, 16, 28, 0.45);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
+/* =========================
+   TECHNIQUES
+========================= */
 
-/* Fenêtre modale centrée */
-.technique-modal {
-  position: relative;
-  width: 100%;
-  max-width: 650px;
-  max-height: 85vh;
-  overflow-y: auto;
-  padding: 24px;
-  background: var(--card-bg, #ffffff);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color, #e5e0eb);
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-}
-
-/* En-tête */
-.technique-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.technique-modal-header h3 {
-  margin: 0;
-}
-.technique-modal h3{
-  color: #ffffff;
-}
-/* Formulaire de création */
-.technique-attempt-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin: 20px 0;
-  padding: 18px;
-  border: 1px solid var(--border-color, #e5e0eb);
-  border-radius: 12px;
-}
-
-/* Carte d'une tentative */
-.technique-attempt-item {
+.technique-buttons {
   display: flex;
   gap: 12px;
-  padding: 14px 16px;
-  border: 1px solid var(--color-surface-light);
-  border-radius: 10px;
-  background: var(--color-surface);
-  color: var(--color-text);
+  margin-top: 15px;
+}
+
+.technique-button {
+  flex: 1;
+  padding: 13px;
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  background: rgba(168, 184, 216, 0.035);
+  border: 1px solid rgba(168, 184, 216, 0.10);
+  border-radius: 11px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: all 0.2s ease;
 }
 
-.technique-attempt-item:hover {
-  border-color: var(--color-accent);
-  background: var(--color-surface-light);
+.technique-button:hover {
+  background: rgba(214, 180, 138, 0.07);
+  border-color: rgba(214, 180, 138, 0.30);
 }
 
-/* Case à cocher */
-.technique-attempt-item input[type="checkbox"] {
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--color-accent);
-  cursor: pointer;
+.technique-button.active {
+  color: var(--color-accent);
+  background: rgba(214, 180, 138, 0.12);
+  border-color: rgba(214, 180, 138, 0.40);
 }
 
-/* Informations de la tentative */
-.technique-attempt-info {
+/* FORMULAIRE */
+
+.technique-form {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-width: 0;
+  gap: 18px;
+  margin-top: 18px;
+  padding: 20px;
+  background: rgba(168, 184, 216, 0.025);
+  border: 1px solid rgba(168, 184, 216, 0.09);
+  border-radius: 14px;
 }
 
-.technique-attempt-name {
-  color: var(--color-text);
+.technique-form h4 {
+  margin: 0;
+  color: var(--color-accent);
+  font-size: 14px;
   font-weight: 600;
 }
 
-.technique-attempt-date {
+.technique-form p {
+  margin: 0;
   color: var(--color-text-secondary);
-  font-size: 0.875rem;
+  font-size: 12px;
 }
 
-/* Aucune tentative */
-.no-attempts {
-  padding: 16px;
-  text-align: center;
-  color: var(--color-text-secondary);
+/* OPTIONS AS / WBTB / OUI / NON */
+
+.ssild-preparations,
+.ssild-completed-options {
+  display: flex;
+  gap: 10px;
 }
-.selected-technique-card {
+
+.ssild-option {
+  flex: 1;
+  padding: 11px 14px;
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(168, 184, 216, 0.035);
+  border: 1px solid rgba(168, 184, 216, 0.10);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ssild-option:hover {
+  border-color: rgba(214, 180, 138, 0.30);
+  background: rgba(214, 180, 138, 0.06);
+}
+
+.ssild-option.active {
+  color: var(--color-accent);
+  background: rgba(214, 180, 138, 0.13);
+  border-color: rgba(214, 180, 138, 0.45);
+}
+
+/* CYCLES */
+
+.ssild-cycles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ssild-cycles h4 {
+  color: var(--color-text);
+  font-size: 12px;
+}
+
+.ssild-cycle-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-
-  margin-top: 12px;
-  padding: 12px 16px;
-
-  background: var(--color-surface);
-  border: 1px solid var(--color-surface-light);
-  border-radius: 10px;
-
-  transition: border-color 0.2s;
+  gap: 15px;
+  padding: 11px 13px;
+  background: rgba(168, 184, 216, 0.035);
+  border: 1px solid rgba(168, 184, 216, 0.08);
+  border-radius: 9px;
 }
 
-.selected-technique-card:hover {
+.ssild-cycle-row label {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.ssild-cycle-row select,
+.ssild-result select {
+  padding: 9px 12px;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 12px;
+  background: var(--color-surface);
+  border: 1px solid rgba(168, 184, 216, 0.15);
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+}
+
+.ssild-cycle-row select:focus,
+.ssild-result select:focus {
   border-color: var(--color-accent);
 }
 
-.selected-technique-info {
+.ssild-cycle-row select option,
+.ssild-result select option {
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+/* RESULTAT */
+
+.ssild-result {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  min-width: 0;
+  gap: 8px;
 }
 
-.selected-technique-name {
-  color: var(--color-text);
-  font-weight: 600;
-  overflow-wrap: anywhere;
+.ssild-result .form-label {
+  margin-bottom: 0;
 }
 
-.selected-technique-date {
-  color: var(--color-text-secondary);
-  font-size: 0.85rem;
-}
-
-/* Bouton Retirer */
-.remove-technique-button {
-  flex-shrink: 0;
-  padding: 7px 11px;
-
-  background: transparent;
-  color: var(--color-danger);
-  border: 1px solid var(--color-danger);
-  border-radius: 7px;
-
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.remove-technique-button:hover {
-  background: var(--color-danger);
-  color: var(--color-text);
-}
-.technique-attempts-list-dream{
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 10px;
-  margin: 16px 0;
-  align-items: start;
+.ssild-result select {
+  width: 100%;
+  padding: 12px;
 }
 /* =========================
    RESPONSIVE
@@ -831,20 +825,12 @@
   .lucidity-level-button {
     padding: 10px;
   }
-  .technique-modal-backdrop {
-    padding: 12px;
+  .technique-form {
+    padding: 15px;
   }
 
-  .technique-modal {
-    max-height: 90vh;
-    padding: 18px;
-    border-radius: 12px;
+  .ssild-cycle-row {
+    gap: 10px;
   }
-  #tentatives-btn{
-    width: 100%;
-  }
-  .technique-attempts-list-dream{
-    grid-template-columns: repeat(2, 1fr);
-}
 }
 

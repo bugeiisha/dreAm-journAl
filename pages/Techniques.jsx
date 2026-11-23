@@ -1,331 +1,377 @@
-import { useEffect, useState } from 'react'
-import {
-  getAllTechniques,
-  addTechnique,
-  updateTechnique,
-  deleteTechnique
-} from '../src/db/dreamDatabase'
+import { useEffect, useMemo, useState } from 'react'
+import { getAllDreams } from '../src/db/dreamDatabase'
 import './Techniques.css'
 
-const emptyTechnique = {
-  name: '',
-  category: '',
-  description: '',
-  notes: '',
+const START_DATE = '2026-07-01'
+
+function StatCard({ label, value, description }) {
+  return (
+    <div className="technique-stat-card">
+      <span>{label}</span>
+      <strong>{value}</strong>
+      {description && <p>{description}</p>}
+    </div>
+  )
 }
 
 function Techniques() {
-  const [techniques, setTechniques] = useState([])
-  const [showForm, setShowForm] = useState(false)
-  const [editingTechnique, setEditingTechnique] = useState(null)
-  const [selectedTechnique, setSelectedTechnique] = useState(null)
-  const [form, setForm] = useState(emptyTechnique)
-  const [search, setSearch] = useState('')
-
-  async function loadTechniques() {
-    const data = await getAllTechniques()
-    setTechniques(data)
-  }
+  const [dreams, setDreams] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [activeTechnique, setActiveTechnique] = useState('ssild')
 
   useEffect(() => {
-    loadTechniques()
+    async function loadDreams() {
+      try {
+        const data = await getAllDreams()
+        setDreams(data)
+      } catch (error) {
+        console.error(
+          'Erreur lors du chargement des rêves :',
+          error,
+        )
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadDreams()
   }, [])
 
-  function openNewTechnique() {
-    setEditingTechnique(null)
-    setForm(emptyTechnique)
-    setShowForm(true)
-  }
+  const recentDreams = useMemo(
+    () =>
+      dreams.filter(
+        (dream) =>
+          dream.date >= START_DATE &&
+          dream.date <= new Date().toISOString().slice(0, 10),
+      ),
+    [dreams],
+  )
 
-  function openEditTechnique(technique) {
-    setEditingTechnique(technique)
-    setForm({
-      ...emptyTechnique,
-      ...technique,
-    })
-    setSelectedTechnique(null)
-    setShowForm(true)
-  }
+  const generalStats = useMemo(() => {
+    const lucidDreams = recentDreams.filter(
+      (dream) => dream.lucid,
+    )
 
-  function closeForm() {
-    setShowForm(false)
-    setEditingTechnique(null)
-    setForm(emptyTechnique)
-  }
+    const falseAwakenings = lucidDreams.filter(
+      (dream) => dream.falseAwakening,
+    )
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-
-    const name = form.name.trim()
-
-    if (!name) return
-
-    const technique = {
-      ...form,
-      name,
-      category: form.category.trim(),
-      description: form.description.trim(),
-      notes: form.notes.trim(),
+    return {
+      lucid: lucidDreams.length,
+      falseAwakenings: falseAwakenings.length,
+      lucidWithoutFE:
+        lucidDreams.length - falseAwakenings.length,
     }
+  }, [recentDreams])
 
-    if (editingTechnique) {
-      await updateTechnique({
-        ...technique,
-        id: editingTechnique.id,
+  const monthlyStats = useMemo(() => {
+    const now = new Date()
+    const currentYear = now.getFullYear()
+    const currentMonth = now.getMonth()
+
+    const months = []
+
+    const start = new Date(2026, 6, 1)
+
+    for (
+      let date = new Date(start);
+      date.getFullYear() < currentYear ||
+      (date.getFullYear() === currentYear &&
+        date.getMonth() <= currentMonth);
+      date.setMonth(date.getMonth() + 1)
+    ) {
+      const year = date.getFullYear()
+      const month = date.getMonth()
+
+      const monthDreams = recentDreams.filter((dream) => {
+        const dreamDate = new Date(`${dream.date}T00:00:00`)
+
+        return (
+          dreamDate.getFullYear() === year &&
+          dreamDate.getMonth() === month
+        )
       })
-    } else {
-      await addTechnique(technique)
-    }
 
-    await loadTechniques()
-    closeForm()
-  }
-  async function handleDelete() {
-      if (!selectedTechnique) return
-
-      const confirmed = window.confirm(
-        `Supprimer la technique « ${selectedTechnique.name} » ?`
+      const lucid = monthDreams.filter(
+        (dream) => dream.lucid,
       )
 
-      if (!confirmed) return
+      const fe = lucid.filter(
+        (dream) => dream.falseAwakening,
+      )
 
-      await deleteTechnique(selectedTechnique.id)
-      setSelectedTechnique(null)
-      await loadTechniques()
+      months.push({
+        key: `${year}-${month}`,
+        label: new Intl.DateTimeFormat('fr-FR', {
+          month: 'long',
+          year: 'numeric',
+        }).format(date),
+        lucid: lucid.length,
+        fe: fe.length,
+        lucidWithoutFE: lucid.length - fe.length,
+      })
     }
 
-  const filteredTechniques = techniques.filter((technique) =>
-    `${technique.name} ${technique.category} ${technique.description}`
-      .toLowerCase()
-      .includes(search.trim().toLowerCase())
-  )
+    return months
+  }, [recentDreams])
+
+  const ssildStats = useMemo(() => {
+    const attempts = dreams
+      .map((dream) => dream.techniqueTracking?.ssild)
+      .filter(Boolean)
+
+    const completed = attempts.filter(
+      (tracking) => tracking.completed === true,
+    )
+
+    const notCompleted = attempts.filter(
+      (tracking) => tracking.completed === false,
+    )
+
+    const withAS = attempts.filter(
+      (tracking) => tracking.preparations?.as,
+    )
+
+    const withWBTB = attempts.filter(
+      (tracking) => tracking.preparations?.wbtb,
+    )
+
+    const results = [
+      { key: 'RL', label: 'Rêve lucide' },
+      { key: 'RN', label: 'Rêve non lucide' },
+      { key: 'FE', label: 'Faux éveil' },
+      { key: 'Faux endormissement', label: 'Faux endormissement' },
+      { key: 'Rien', label: 'Aucun résultat' },
+    ].map((result) => ({
+      ...result,
+      count: attempts.filter(
+        (tracking) => tracking.result === result.key,
+      ).length,
+    }))
+
+    const cycleStats = {}
+
+    attempts.forEach((tracking) => {
+      const key = `${tracking.fastCycles ?? 0}-${tracking.slowCycles ?? 0}`
+      cycleStats[key] = (cycleStats[key] || 0) + 1
+    })
+
+    const cycles = Object.entries(cycleStats)
+      .map(([label, count]) => ({ label, count }))
+      .sort((a, b) => {
+        const [aFast, aSlow] = a.label.split('-').map(Number)
+        const [bFast, bSlow] = b.label.split('-').map(Number)
+
+        return aFast - bFast || aSlow - bSlow
+      })
+
+    return {
+      total: attempts.length,
+      completed: completed.length,
+      notCompleted: notCompleted.length,
+      withAS: withAS.length,
+      withWBTB: withWBTB.length,
+      results,
+      cycles,
+    }
+  }, [dreams])
+
+  if (loading) {
+    return (
+      <div className="techniques-page">
+        Chargement des statistiques...
+      </div>
+    )
+  }
 
   return (
     <div className="techniques-page">
       <div className="techniques-layout">
-          <div className="techniques-left">
-              <div className="techniques-header">
-                <span className="techniques-eyebrow">
-                  JOURNAL ONIRIQUE
-                </span>
-                <h2>Techniques</h2>
-                <p>
-                  Recense tes techniques et observe ce que tu apprends
-                  au fil de tes expériences.
-                </p>
-                <div className="techniques-toolbar">
-                  <input
-                    type="text"
-                    placeholder="Rechercher une technique..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="technique-search"
-                  />
-                  <button
-                    className="techniques-primary-button"
-                    onClick={openNewTechnique}
-                  >
-                    + Nouvelle technique
-                  </button>
-                </div>
-              </div>
-              <h2 className="techniques-count">
-                Techniques ({filteredTechniques.length})
-              </h2>
-              {filteredTechniques.length === 0 ? (
-                <div className="techniques-empty">
-                  <h3>
-                    {search
-                      ? 'Aucune technique trouvée'
-                      : 'Ton catalogue est vide'}
-                  </h3>
-                  <p>
-                    {search
-                      ? 'Essaie un autre terme de recherche.'
-                      : 'Ajoute une technique pour commencer à suivre tes expériences.'}
-                  </p>
-                </div>
-              ) : (
-                <div className="techniques-grid">
-                  {filteredTechniques.map((technique) => (
-                    <button
-                      type="button"
-                      key={technique.id}
-                      className="technique-card"
-                      onClick={() => setSelectedTechnique(technique)}
-                    >
-                      {technique.category && (
-                        <span className="technique-category">
-                          {technique.category}
-                        </span>
-                      )}
-                      <h3>{technique.name}</h3>
-                      <p>
-                        {technique.description ||
-                          'Aucune description pour le moment.'}
-                      </p>
-                      <span className="technique-card-action">
-                        Voir la fiche →
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-              {selectedTechnique && (
-                <div
-                  className="technique-overlay"
-                  onClick={() => setSelectedTechnique(null)}
-                >
-                  <div
-                    className="technique-modal"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div className="technique-modal-header">
-                      <div>
-                        <span className="techniques-eyebrow">
-                          FICHE TECHNIQUE
-                        </span>
-                        <h2>{selectedTechnique.name}</h2>
-                      </div>
-                      <button
-                        type="button"
-                        className="technique-close"
-                        onClick={() => setSelectedTechnique(null)}
-                        aria-label="Fermer"
-                      >
-                        ×
-                      </button>
-                    </div>
-                    {selectedTechnique.category && (
-                      <p>
-                        <strong>Catégorie :</strong>{' '}
-                        {selectedTechnique.category}
-                      </p>
-                    )}
-                    <h3>Description</h3>
-                    <p>
-                      {selectedTechnique.description ||
-                        'Aucune description enregistrée.'}
-                    </p>
-                    <h3>Mes notes</h3>
-                    <p>
-                      {selectedTechnique.notes ||
-                        'Aucune note pour le moment.'}
-                    </p>
-                    <div className="techniques-preview-actions">
-                      <button
-                        className="techniques-edit-button"
-                        onClick={() => {
-                          setEditingTechnique(selectedTechnique)
-                          setForm({
-                            name: selectedTechnique.name || '',
-                            category: selectedTechnique.category || '',
-                            description: selectedTechnique.description || '',
-                            notes: selectedTechnique.notes || ''
-                          })
-                          setSelectedTechnique(null)
-                          setShowForm(true)
-                        }}
-                        aria-label="Modifier cette technique"
-                        title="Modifier cette technique"
-                      >
-                        ✎
-                      </button>
-                    
-                      <button
-                        className="techniques-delete-button"
-                        onClick={handleDelete}
-                        aria-label="Supprimer cette technique"
-                        title="Supprimer cette technique"
-                      >
-                        🗑
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {showForm && (
-                <div
-                  className="technique-overlay"
-                  onClick={closeForm}
-                >
-                  <form
-                    className="technique-modal technique-form"
-                    onClick={(e) => e.stopPropagation()}
-                    onSubmit={handleSubmit}
-                  >
-                    <div className="technique-modal-header">
-                      <h2>
-                        {editingTechnique
-                          ? 'Modifier la technique'
-                          : 'Nouvelle technique'}
-                      </h2>
-                      <button
-                        type="button"
-                        className="technique-close"
-                        onClick={closeForm}
-                        aria-label="Fermer"
-                      >
-                        ×
-                      </button>
-                    </div>
-                    <label>
-                      Nom *
-                      <input
-                        required
-                        autoFocus
-                        value={form.name}
-                        onChange={(e) =>
-                          setForm({ ...form, name: e.target.value })
-                        }
-                        placeholder="Ex. SSILD"
-                      />
-                    </label>
-                    <label>
-                      Catégorie
-                      <input
-                        value={form.category}
-                        onChange={(e) =>
-                          setForm({ ...form, category: e.target.value })
-                        }
-                        placeholder="Ex. Induction"
-                      />
-                    </label>
-                    <label>
-                      Description
-                      <textarea
-                        value={form.description}
-                        onChange={(e) =>
-                          setForm({
-                            ...form,
-                            description: e.target.value,
-                          })
-                        }
-                        placeholder="Comment fonctionne cette technique ?"
-                      />
-                    </label>
-                    <label>
-                      Mes notes
-                      <textarea
-                        value={form.notes}
-                        onChange={(e) =>
-                          setForm({ ...form, notes: e.target.value })
-                        }
-                        placeholder="Mes observations, adaptations..."
-                      />
-                    </label>
-                    
-                      <button
-                        type="submit"
-                        className="technique-save-button"
-                      >
-                        Enregistrer
-                      </button>
-                    
-                  </form>
-                </div>
-              )}
+        <div className="techniques-left">
+
+          <div className="techniques-header">
+            <span className="techniques-eyebrow">
+              JOURNAL ONIRIQUE
+            </span>
+
+            <h2>Techniques & statistiques</h2>
+
+            <p>
+              Observe tes rêves lucides et l'évolution de tes expériences.
+            </p>
           </div>
+
+          {/* STATISTIQUES GÉNÉRALES */}
+
+          <h3 className="techniques-section-title">
+            Rêves lucides depuis juillet 2026
+          </h3>
+
+          <div className="techniques-stats-grid">
+            <StatCard
+              label="Rêves lucides"
+              value={generalStats.lucid}
+              description="FE compris"
+            />
+
+            <StatCard
+              label="Faux éveils"
+              value={generalStats.falseAwakenings}
+              description="Parmi les rêves lucides"
+            />
+
+            <StatCard
+              label="RL sans FE"
+              value={generalStats.lucidWithoutFE}
+              description="Autres rêves lucides"
+            />
+          </div>
+
+          {/* ÉVOLUTION MENSUELLE */}
+
+          <h3 className="techniques-section-title">
+            Évolution mensuelle
+          </h3>
+
+          <div className="techniques-table-wrapper">
+            <table className="techniques-table">
+              <thead>
+                <tr>
+                  <th>Mois</th>
+                  <th>RL</th>
+                  <th>FE</th>
+                  <th>RL sans FE</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {monthlyStats.map((month) => (
+                  <tr key={month.key}>
+                    <td>{month.label}</td>
+                    <td>{month.lucid}</td>
+                    <td>{month.fe}</td>
+                    <td>{month.lucidWithoutFE}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* TECHNIQUES */}
+
+          <h3 className="techniques-section-title">
+            Suivi des techniques
+          </h3>
+
+          <div className="techniques-tabs">
+            <button
+              type="button"
+              className={activeTechnique === 'ssild' ? 'active' : ''}
+              onClick={() => setActiveTechnique('ssild')}
+            >
+              SSILD
+            </button>
+
+            <button
+              type="button"
+              className={activeTechnique === 'wild' ? 'active' : ''}
+              onClick={() => setActiveTechnique('wild')}
+            >
+              WILD
+            </button>
+          </div>
+
+          {activeTechnique === 'ssild' ? (
+            <>
+              <h3 className="techniques-section-title">
+                Vue d'ensemble
+              </h3>
+
+              <div className="techniques-stats-grid">
+                <StatCard
+                  label="Tentatives"
+                  value={ssildStats.total}
+                  description="Enregistrées dans tes rêves"
+                />
+
+                <StatCard
+                  label="Menées à terme"
+                  value={ssildStats.completed}
+                />
+
+                <StatCard
+                  label="Non terminées"
+                  value={ssildStats.notCompleted}
+                />
+              </div>
+
+              <h3 className="techniques-section-title">
+                Préparations
+              </h3>
+
+              <div className="techniques-stats-grid">
+                <StatCard
+                  label="Avec AS"
+                  value={ssildStats.withAS}
+                />
+
+                <StatCard
+                  label="Avec WBTB"
+                  value={ssildStats.withWBTB}
+                />
+              </div>
+
+              <h3 className="techniques-section-title">
+                Résultats
+              </h3>
+
+              <div className="techniques-results-list">
+                {ssildStats.results.map((result) => (
+                  <div
+                    className="techniques-result-row"
+                    key={result.key}
+                  >
+                    <span>{result.label}</span>
+                    <strong>{result.count}</strong>
+                  </div>
+                ))}
+              </div>
+
+              <h3 className="techniques-section-title">
+                Cycles effectués
+              </h3>
+
+              <div className="techniques-results-list">
+                {ssildStats.cycles.length > 0 ? (
+                  ssildStats.cycles.map((cycle) => (
+                    <div
+                      className="techniques-result-row"
+                      key={cycle.label}
+                    >
+                      <span>
+                        {cycle.label.replace('-', ' rapides / ')} lents
+                      </span>
+                      <strong>{cycle.count}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <p className="techniques-empty">
+                    Aucune donnée sur les cycles pour le moment.
+                  </p>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="techniques-empty">
+              <h3>WILD</h3>
+              <p>
+                Le suivi statistique de cette technique sera ajouté
+                lorsque son formulaire sera mis en place.
+              </p>
+            </div>
+          )}
+
+        </div>
       </div>
     </div>
   )

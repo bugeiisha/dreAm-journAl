@@ -20,7 +20,6 @@ const tagsNavigation = [
   { icon: '', label: 'Carte onirique', path: '/carte' },
   { icon: '', label: 'Places', path: '/places' },
   { icon: '', label: 'Techniques', path: '/techniques' },
-  { icon: '', label: 'Journal des tentatives', path: '/technique-attempts' },
   { icon: '', label: 'Other', path: '/other' },
   { label: 'Paramètres', path: '/parametres' },
 ]
@@ -36,7 +35,6 @@ const mobileMoreNavigation = [
   { label: 'Carte onirique', path: '/carte' },
   { label: 'Places', path: '/places' },
   { label: 'Techniques', path: '/techniques' },
-  { label: 'Journal des tentatives', path: '/technique-attempts' },
   { label: 'Other', path: '/other' },
   { label: 'Paramètres', path: '/parametres' },
 ]

@@ -1,7 +1,7 @@
 import { openDB } from 'idb'
 
 const DB_NAME = 'oneiric-journal'
-const DB_VERSION = 7
+const DB_VERSION = 8
 
 const dbPromise = openDB(DB_NAME, DB_VERSION, {
   upgrade(db) {
@@ -61,6 +61,16 @@ const dbPromise = openDB(DB_NAME, DB_VERSION, {
       store.createIndex('techniqueId', 'techniqueId')
       store.createIndex('date', 'date')
       store.createIndex('dreamId', 'dreamId')
+    }
+    if (!db.objectStoreNames.contains('quickTechniqueAttempts')) {
+      const store = db.createObjectStore('quickTechniqueAttempts', {
+        keyPath: 'id',
+        autoIncrement: true,
+      })
+    
+      store.createIndex('dreamId', 'dreamId')
+      store.createIndex('techniqueId', 'techniqueId')
+      store.createIndex('result', 'result')
     }
   },
 })
@@ -302,5 +312,35 @@ export async function updateTechniqueAttempt(attempt) {
 export async function deleteTechniqueAttempt(id) {
   return dbPromise.then((db) =>
     db.delete('techniqueAttempts', Number(id)),
+  )
+}
+/* =========================
+   QUICK ATTEMPTS
+========================= */
+
+export async function addQuickTechniqueAttempt(attempt) {
+  return dbPromise.then((db) =>
+    db.add('quickTechniqueAttempts', attempt),
+  )
+}
+
+export async function updateQuickTechniqueAttempt(attempt) {
+  return dbPromise.then((db) =>
+    db.put('quickTechniqueAttempts', attempt),
+  )
+}
+
+export async function deleteQuickTechniqueAttempt(id) {
+  return dbPromise.then((db) =>
+    db.delete('quickTechniqueAttempts', Number(id)),
+  )
+}
+export async function getQuickTechniqueAttemptsByDream(dreamId) {
+  return dbPromise.then((db) =>
+    db.getAllFromIndex(
+      'quickTechniqueAttempts',
+      'dreamId',
+      Number(dreamId),
+    ),
   )
 }

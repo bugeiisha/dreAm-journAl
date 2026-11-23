@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, } from 'react-router-dom'
-import { addDream, getAllDreams, getDream, updateDream as updateSavedDream,  getAllQuests, getAllCharacters, getAllTechniques, getAllTechniqueAttempts, addTechniqueAttempt, updateTechniqueAttempt } from '../src/db/dreamDatabase'
+import { addDream, getAllDreams, getDream, updateDream as updateSavedDream,  getAllQuests, getAllCharacters } from '../src/db/dreamDatabase'
 
 import './DreamEditor.css'
 
@@ -23,6 +23,18 @@ function createInitialDream() {
     objects: [],
     other: [],
     techniques: [],
+    techniqueTracking: {
+      ssild: {
+        preparations: {
+          as: false,
+          wbtb: false,
+        },
+        completed: null,
+        fastCycles: 0,
+        slowCycles: 0,
+        result: '',
+      },
+    },
     linkedQuests: [],
     notes: '',
     image: null,
@@ -119,12 +131,8 @@ function DreamEditor() {
 
     loadPRs()
   }, [])
-  const [techniques, setTechniques] = useState([])
-  const [techniqueAttempts, setTechniqueAttempts] = useState([])
-  const [selectedAttemptIds, setSelectedAttemptIds] = useState([])
-  const [newTechniqueAttempts, setNewTechniqueAttempts] = useState([])
-  const [isTechniqueModalOpen, setIsTechniqueModalOpen] = useState(false)
-
+  const [activeTechnique, setActiveTechnique] = useState('')
+  
   const [tagInputs, setTagInputs] = useState({
     characters: '',
     places: '',
@@ -141,18 +149,6 @@ function DreamEditor() {
     techniques: [],
   })
 
-  const [attemptDraft, setAttemptDraft] = useState({
-    techniqueId: '',
-    date: new Date().toISOString().split('T')[0],
-    durationMinutes: '',
-    conditions: '',
-    description: '',
-    notes: '',
-    techniqueResult: 'completed',
-    dreamResult: 'none',
-  })
-
-  const [isCreatingAttempt, setIsCreatingAttempt] = useState(false)
   /* =========================
      CHARGEMENT DU RÊVE
   ========================= */
@@ -169,20 +165,26 @@ function DreamEditor() {
           return
         }
 
+        const initialDream = createInitialDream()
         setDream({
-          ...createInitialDream(),
+          ...initialDream,
           ...savedDream,
+          techniqueTracking: {
+            ...initialDream.techniqueTracking,
+            ...(savedDream.techniqueTracking || {}),
+            ssild: {
+              ...initialDream.techniqueTracking.ssild,
+              ...(savedDream.techniqueTracking?.ssild || {}),
+              preparations: {
+                ...initialDream.techniqueTracking.ssild.preparations,
+                ...(savedDream.techniqueTracking?.ssild?.preparations || {}),
+              },
+            },
+          },
         })
-        const linkedAttempts = await getAllTechniqueAttempts()
-
-        setSelectedAttemptIds(
-          linkedAttempts
-            .filter(
-              (attempt) =>
-                Number(attempt.dreamId) === Number(dreamId)
-            )
-            .map((attempt) => attempt.id)
-        )
+        if (savedDream.techniqueTracking?.ssild) {
+          setActiveTechnique('ssild')
+        }
       } catch (error) {
         console.error(
           'Erreur lors du chargement du rêve :',
@@ -226,25 +228,6 @@ function DreamEditor() {
    ET DES TENTATIVES
 ========================= */
 
-  useEffect(() => {
-    async function loadTechniqueData() {
-      try {
-        const savedTechniques = await getAllTechniques()
-        const savedAttempts = await getAllTechniqueAttempts()
-
-        setTechniques(savedTechniques)
-        setTechniqueAttempts(savedAttempts)
-      } catch (error) {
-        console.error(
-          'Erreur lors du chargement des techniques :',
-          error,
-        )
-      }
-    }
-
-    loadTechniqueData()
-  }, [])
-
   /* =========================
      MODIFICATION DES DONNÉES
   ========================= */
@@ -253,6 +236,34 @@ function DreamEditor() {
     setDream((currentDream) => ({
       ...currentDream,
       [field]: value,
+    }))
+  }
+  const updateSSILD = (field, value) => {
+    setDream((current) => ({
+      ...current,
+      techniqueTracking: {
+        ...current.techniqueTracking,
+        ssild: {
+          ...current.techniqueTracking.ssild,
+          [field]: value,
+        },
+      },
+    }))
+  }
+
+  const toggleSSILDPreparation = (preparation) => {
+    setDream((current) => ({
+      ...current,
+      techniqueTracking: {
+        ...current.techniqueTracking,
+        ssild: {
+          ...current.techniqueTracking.ssild,
+          preparations: {
+            ...current.techniqueTracking.ssild.preparations,
+            [preparation]: !current.techniqueTracking.ssild.preparations[preparation],
+          },
+        },
+      },
     }))
   }
 
@@ -416,41 +427,6 @@ function removePR(prId) {
         savedDreamId = Number(dreamId)
       } else {
         savedDreamId = await addDream(dream)
-      }
-
-      // Associer les tentatives existantes sélectionnées
-      const selectedIds = selectedAttemptIds.map(Number)
-
-      for (const attempt of techniqueAttempts) {
-        const isLinkedToThisDream =
-          Number(attempt.dreamId) === Number(savedDreamId)
-      
-        const shouldBeLinked = selectedIds.includes(Number(attempt.id))
-      
-        if (shouldBeLinked && !isLinkedToThisDream) {
-          await updateTechniqueAttempt({
-            ...attempt,
-            dreamId: savedDreamId,
-          })
-        } else if (isLinkedToThisDream && !shouldBeLinked) {
-          await updateTechniqueAttempt({
-            ...attempt,
-            dreamId: null,
-          })
-        }
-      }
-
-      // Enregistrer les nouvelles tentatives avec le rêve
-      for (const attempt of newTechniqueAttempts) {
-        await addTechniqueAttempt({
-          ...attempt,
-          techniqueId: Number(attempt.techniqueId),
-          durationMinutes:
-            attempt.durationMinutes === ''
-              ? null
-              : Number(attempt.durationMinutes),
-          dreamId: savedDreamId,
-        })
       }
 
       navigate('/reves')
@@ -948,77 +924,143 @@ const filteredPRs = allPRs.filter((pr) =>
           />
         </section>
         <section className="form-section">
-          <h3 className='form-label'>Techniques</h3>
+          <h3 className="form-label">Techniques</h3>
 
-          <button
-            type="button"
-            className="primary-button"
-            id='tentatives-btn'
-            onClick={() => setIsTechniqueModalOpen(true)}
-          >
-            Gérer les tentatives
-          </button>
+          <div className="technique-buttons">
+            <button
+              type="button"
+              className={`technique-button ${activeTechnique === 'ssild' ? 'active' : ''}`}
+              onClick={() =>
+                setActiveTechnique(activeTechnique === 'ssild' ? '' : 'ssild')
+              }
+            >
+              SSILD
+            </button>
+            
+            <button
+              type="button"
+              className={`technique-button ${activeTechnique === 'wild' ? 'active' : ''}`}
+              onClick={() =>
+                setActiveTechnique(activeTechnique === 'wild' ? '' : 'wild')
+              }
+            >
+              WILD
+            </button>
+          </div>
+            
+          {activeTechnique === 'ssild' && (
+            <div className="technique-form">
+              <h4>SSILD</h4>
+          
+              <div className="ssild-preparations">
+                <button
+                  type="button"
+                  className={`ssild-option ${dream.techniqueTracking.ssild.preparations.as ? 'active' : ''}`}
+                  onClick={() => toggleSSILDPreparation('as')}
+                >
+                  AS
+                </button>
+          
+                <button
+                  type="button"
+                  className={`ssild-option ${dream.techniqueTracking.ssild.preparations.wbtb ? 'active' : ''}`}
+                  onClick={() => toggleSSILDPreparation('wbtb')}
+                >
+                  WBTB
+                </button>
+              </div>
+          
+              <label className="form-label">
+                Menée à terme ?
+              </label>
+          
+              <div className="ssild-completed-options">
+                <button
+                  type="button"
+                  className={`ssild-option ${dream.techniqueTracking.ssild.completed === true ? 'active' : ''}`}
+                  onClick={() => updateSSILD('completed', true)}
+                >
+                  Oui
+                </button>
+          
+                <button
+                  type="button"
+                  className={`ssild-option ${dream.techniqueTracking.ssild.completed === false ? 'active' : ''}`}
+                  onClick={() => updateSSILD('completed', false)}
+                >
+                  Non
+                </button>
+              </div>
+              <div className="ssild-cycles">
+                <h4>Cycles</h4>
 
-          {selectedAttemptIds.map((id) => {
-  const attempt = techniqueAttempts.find((item) => item.id === id);
-  if (!attempt) return null;
+                <div className="ssild-cycle-row">
+                  <label htmlFor="ssild-fast-cycles">
+                    Cycles rapides
+                  </label>
 
-  const technique = techniques.find(
-    (item) => item.id === Number(attempt.techniqueId)
-  );
+                  <select
+                    id="ssild-fast-cycles"
+                    value={dream.techniqueTracking.ssild.fastCycles}
+                    onChange={(event) =>
+                      updateSSILD('fastCycles', Number(event.target.value))
+                    }
+                  >
+                    {[0, 1, 2, 3, 4].map((value) => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                  
+                <div className="ssild-cycle-row">
+                  <label htmlFor="ssild-slow-cycles">
+                    Cycles lents
+                  </label>
+                  
+                  <select
+                    id="ssild-slow-cycles"
+                    value={dream.techniqueTracking.ssild.slowCycles}
+                    onChange={(event) =>
+                      updateSSILD('slowCycles', Number(event.target.value))
+                    }
+                  >
+                    {[0, 1, 2, 3, 4, 5].map((value) => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="ssild-result">
+                <label className="form-label" htmlFor="ssild-result">
+                  Résultat
+                </label>
 
-  return (
-    <div key={id} className="selected-technique-card">
-      <div className="selected-technique-info">
-        <span className="selected-technique-name">
-          {technique?.name || 'Technique inconnue'}
-        </span>
-        <span className="selected-technique-date">{attempt.date}</span>
-      </div>
+                <select
+                  id="ssild-result"
+                  value={dream.techniqueTracking.ssild.result}
+                  onChange={(event) => updateSSILD('result', event.target.value)}
+                >
+                  <option value="">Choisir un résultat</option>
+                  <option value="rl">RL</option>
+                  <option value="rn">RN</option>
+                  <option value="fe">FE</option>
+                  <option value="false-sleep">Faux endormissement</option>
+                  <option value="none">Rien</option>
+                </select>
+              </div>
+            </div>
+          )}
 
-      <button
-        type="button"
-        className="remove-technique-button"
-        onClick={() =>
-          setSelectedAttemptIds((current) =>
-            current.filter((itemId) => itemId !== id)
-          )
-        }
-      >
-        Retirer
-      </button>
-    </div>
-  );
-})}
-
-{newTechniqueAttempts.map((attempt, index) => {
-  const technique = techniques.find(
-    (item) => item.id === Number(attempt.techniqueId)
-  );
-
-  return (
-    <div key={index} className="selected-technique-card">
-      <div className="selected-technique-info">
-        <span className="selected-technique-name">
-          {technique?.name || 'Nouvelle tentative'}
-        </span>
-        <span className="selected-technique-date">{attempt.date}</span>
-      </div>
-
-      <button
-        type="button"
-        className="remove-technique-button"
-        onClick={() =>
-          setNewTechniqueAttempts((current) =>
-            current.filter((_, i) => i !== index)
-          )
-        }
-      >
-        Retirer
-      </button>
-    </div>
-  );
-})}
+          {activeTechnique === 'wild' && (
+            <div className="technique-form">
+              <h4>WILD</h4>
+              <p>Le suivi WILD sera ajouté ultérieurement.</p>
+            </div>
+          )}
         </section>
         {/* =========================
             QUÊTES LIÉES
@@ -1168,265 +1210,6 @@ const filteredPRs = allPRs.filter((pr) =>
           </button>
         </div>
       </form>
-      {isTechniqueModalOpen && (
-        <div className="technique-modal-backdrop">
-          <div
-            className="technique-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="technique-modal-title"
-          >
-            <div className="technique-modal-header">
-              <h3 id="technique-modal-title">
-                Gérer les tentatives
-              </h3>
-
-              <button
-                type="button"
-                className='add-tag-button'
-                onClick={() => setIsTechniqueModalOpen(false)}
-              >
-                ×
-              </button>
-            </div>
-            <button
-              type="button"
-              className='primary-button'
-              id='tentatives-btn'
-              onClick={() => setIsCreatingAttempt((current) => !current)}
-            >
-              {isCreatingAttempt
-                ? 'Annuler la création'
-                : '+ Nouvelle tentative'}
-            </button>
-              
-            {isCreatingAttempt && (
-              <div className="technique-attempt-form">
-                <h4>Nouvelle tentative</h4>
-            
-                <label>
-                  Technique
-                  <select
-                    value={attemptDraft.techniqueId}
-                    onChange={(event) =>
-                      setAttemptDraft((current) => ({
-                        ...current,
-                        techniqueId: event.target.value,
-                      }))
-                    }
-                    required
-                  >
-                    <option value="">Choisir une technique</option>
-                  
-                    {techniques.map((technique) => (
-                      <option
-                        key={technique.id}
-                        value={technique.id}
-                      >
-                        {technique.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                  
-                <label>
-                  Date
-                  <input
-                    type="date"
-                    value={attemptDraft.date}
-                    onChange={(event) =>
-                      setAttemptDraft((current) => ({
-                        ...current,
-                        date: event.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </label>
-                  
-                <label>
-                  Durée (minutes)
-                  <input
-                    type="number"
-                    min="0"
-                    value={attemptDraft.durationMinutes}
-                    onChange={(event) =>
-                      setAttemptDraft((current) => ({
-                        ...current,
-                        durationMinutes: event.target.value,
-                      }))
-                    }
-                  />
-                </label>
-                  
-                <label>
-                  Conditions
-                  <textarea
-                    value={attemptDraft.conditions}
-                    onChange={(event) =>
-                      setAttemptDraft((current) => ({
-                        ...current,
-                        conditions: event.target.value,
-                      }))
-                    }
-                  />
-                </label>
-                  
-                <label>
-                  Description
-                  <textarea
-                    value={attemptDraft.description}
-                    onChange={(event) =>
-                      setAttemptDraft((current) => ({
-                        ...current,
-                        description: event.target.value,
-                      }))
-                    }
-                  />
-                </label>
-                  
-                <label>
-                  Notes
-                  <textarea
-                    value={attemptDraft.notes}
-                    onChange={(event) =>
-                      setAttemptDraft((current) => ({
-                        ...current,
-                        notes: event.target.value,
-                      }))
-                    }
-                  />
-                </label>
-                  
-                <label>
-                  Résultat de la technique
-                  <select
-                    value={attemptDraft.techniqueResult}
-                    onChange={(event) =>
-                      setAttemptDraft((current) => ({
-                        ...current,
-                        techniqueResult: event.target.value,
-                      }))
-                    }
-                  >
-                    <option value="completed">Terminée</option>
-                    <option value="partial">Partielle</option>
-                    <option value="interrupted">Interrompue</option>
-                    <option value="not-done">Non réalisée</option>
-                  </select>
-                </label>
-                  
-                <label>
-                  Résultat sur le rêve
-                  <select
-                    value={attemptDraft.dreamResult}
-                    onChange={(event) =>
-                      setAttemptDraft((current) => ({
-                        ...current,
-                        dreamResult: event.target.value,
-                      }))
-                    }
-                  >
-                    <option value="none">Aucun résultat</option>
-                    <option value="rl">Rêve lucide</option>
-                    <option value="rn">Rêve non lucide</option>
-                    <option value="no-dream">Aucun rêve mémorisé</option>
-                    <option value="other">Autre</option>
-                  </select>
-                </label>
-                  
-                <button
-                  type="button"
-                  className='primary-button'
-                  onClick={() => {
-                    if (!attemptDraft.techniqueId || !attemptDraft.date) {
-                      alert('Choisis une technique et une date.')
-                      return
-                    }
-                  
-                    setNewTechniqueAttempts((current) => [
-                      ...current,
-                      { ...attemptDraft },
-                    ])
-                  
-                    setAttemptDraft({
-                      techniqueId: '',
-                      date: new Date().toISOString().split('T')[0],
-                      durationMinutes: '',
-                      conditions: '',
-                      description: '',
-                      notes: '',
-                      techniqueResult: 'completed',
-                      dreamResult: 'none',
-                    })
-                  
-                    setIsCreatingAttempt(false)
-                  }}
-                >
-                  Ajouter à ce rêve
-                </button>
-              </div>
-            )}
-            <h4>Tentatives existantes</h4>
-
-            {(() => {
-              const availableAttempts = techniqueAttempts.filter(
-                (attempt) =>
-                  !attempt.dreamId ||
-                  Number(attempt.dreamId) === Number(dreamId)
-              );
-              if (availableAttempts.length === 0) {
-                return <p className="no-attempts">Aucune tentative disponible.</p>;
-              }
-            
-              return (
-                <div className="technique-attempts-list-dream">
-                  {availableAttempts.map((attempt) => {
-                    const technique = techniques.find(
-                      (item) => item.id === Number(attempt.techniqueId)
-                    );
-                  
-                    return (
-                      <label key={attempt.id} className="technique-attempt-item">
-                        <input
-                          type="checkbox"
-                          checked={selectedAttemptIds.includes(attempt.id)}
-                          onChange={(event) => {
-                            setSelectedAttemptIds((current) =>
-                              event.target.checked
-                                ? [...current, attempt.id]
-                                : current.filter((id) => id !== attempt.id)
-                            );
-                          }}
-                        />
-                        <span className="technique-attempt-info">
-                          <span className="technique-attempt-name">
-                            {technique?.name || 'Technique inconnue'}
-                          </span>
-                          <span className="technique-attempt-date">
-                            {attempt.date}
-                          </span>
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-              );
-            })()}
-
-            <div className="technique-modal-actions">
-              <button
-                type="button"
-                className='primary-button'
-                id='tentatives-btn'
-                onClick={() => setIsTechniqueModalOpen(false)}
-              >
-                Terminer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
