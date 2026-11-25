@@ -45,40 +45,51 @@
   font-weight: 600;
 }
 
-/* CARTES STATISTIQUES */
+/* =========================
+   STATISTIQUES GÉNÉRALES
+========================= */
 
 .techniques-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 4px;
 }
 
 .technique-stat-card {
   display: flex;
-  flex-direction: column;
-  gap: 9px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
   min-width: 0;
-  padding: 22px;
-  background: var(--color-surface);
-  border: 1px solid rgba(170, 184, 204, 0.12);
-  border-radius: 16px;
+  padding: 17px 4px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(170, 184, 204, 0.12);
+  border-radius: 0;
+}
+
+.technique-stat-card:last-child {
+  border-bottom: none;
 }
 
 .technique-stat-card > span {
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .technique-stat-card strong {
-  font-size: 30px;
+  font-size: 21px;
   font-weight: 600;
+  color: var(--color-accent);
 }
 
 .technique-stat-card p {
-  margin: 0;
+  margin: 0 auto 0 0;
   color: var(--color-text-secondary);
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 /* TABLEAU MENSUEL */
@@ -194,7 +205,162 @@
 .techniques-result-row strong {
   font-size: 15px;
 }
+/* =========================
+   TABLEAU DE BORD SSILD
+========================= */
 
+.ssild-overview {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 0 36px;
+  padding: 24px 28px;
+  background: var(--color-surface);
+  border: 1px solid rgba(170, 184, 204, 0.12);
+  border-radius: 16px;
+}
+
+.ssild-activity {
+  grid-column: 1 / -1;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(170, 184, 204, 0.12);
+}
+
+.ssild-label {
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+.ssild-activity-number {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.ssild-activity-number strong {
+  font-size: 36px;
+  font-weight: 600;
+}
+
+.ssild-activity-number span {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.ssild-activity-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.ssild-progress {
+  display: flex;
+  width: 100%;
+  height: 7px;
+  margin-top: 14px;
+  overflow: hidden;
+  background: rgba(170, 184, 204, 0.12);
+  border-radius: 20px;
+}
+
+.ssild-progress-completed {
+  height: 100%;
+  background: #6c9d82;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.ssild-results,
+.ssild-preparations-summary {
+  padding-top: 22px;
+}
+
+.ssild-results {
+  padding-right: 28px;
+  border-right: 1px solid rgba(170, 184, 204, 0.12);
+}
+
+.ssild-results h4,
+.ssild-preparations-summary h4 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ssild-stat-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(170, 184, 204, 0.08);
+}
+
+.ssild-stat-line:last-child {
+  border-bottom: none;
+}
+
+.ssild-stat-line span {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.ssild-stat-line strong {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* CYCLES SSILD */
+
+.techniques-results-list {
+  padding: 5px 22px;
+}
+
+.techniques-result-row {
+  gap: 20px;
+}
+
+.techniques-result-row span {
+  flex: 1;
+}
+
+.techniques-result-row strong {
+  min-width: 24px;
+  text-align: right;
+}
+/* TABLEAU MENSUEL - STYLE AFFINÉ */
+
+.techniques-table-wrapper {
+  border-radius: 12px;
+  background: transparent;
+}
+
+.techniques-table th {
+  padding-top: 13px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid rgba(170, 184, 204, 0.18);
+}
+
+.techniques-table td {
+  padding-top: 17px;
+  padding-bottom: 17px;
+}
+
+.techniques-table td:first-child {
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.techniques-table td:last-child {
+  font-weight: 600;
+  color: var(--color-accent);
+}
 /* ÉTAT VIDE */
 
 .techniques-empty {
@@ -220,30 +386,39 @@
 /* RESPONSIVE */
 
 @media (max-width: 768px) {
-  .techniques-header h2 {
-    font-size: 29px;
-  }
-
   .techniques-stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    padding: 0;
   }
 
   .technique-stat-card {
-    padding: 16px;
-    border-radius: 14px;
-  }
-
-  .technique-stat-card strong {
-    font-size: 25px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 15px;
+    row-gap: 3px;
+    padding: 15px 2px;
   }
 
   .technique-stat-card > span {
-    font-size: 12px;
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 13px;
   }
 
   .technique-stat-card p {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
     font-size: 11px;
+  }
+
+  .technique-stat-card strong {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    font-size: 25px;
+  }
+  .techniques-header h2 {
+    font-size: 29px;
   }
 
   .techniques-section-title {
@@ -259,6 +434,25 @@
 
   .techniques-tabs {
     margin-top: 20px;
+  }
+  .ssild-overview {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .ssild-results {
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(170, 184, 204, 0.12);
+    padding-bottom: 16px;
+  }
+
+  .ssild-preparations-summary {
+    padding-top: 16px;
+  }
+
+  .ssild-activity-number strong {
+    font-size: 30px;
   }
 }
 

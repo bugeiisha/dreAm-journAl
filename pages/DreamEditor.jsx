@@ -1161,7 +1161,7 @@ const filteredPRs = allPRs.filter((pr) =>
                           { value: 'rn', label: 'RN' },
                           { value: 'fe', label: 'FE' },
                           { value: 'none', label: 'Rien' },
-                          { value: 'false-sleep', label: 'Faux endormissement' },
+                          { value: 'false-sleep', label: 'FNE' },
                         ].map((result) => (
                           <button
                             key={result.value}

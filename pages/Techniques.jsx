@@ -105,9 +105,9 @@ function Techniques() {
           month: 'long',
           year: 'numeric',
         }).format(date),
-        lucid: lucid.length,
-        fe: fe.length,
-        lucidWithoutFE: lucid.length - fe.length,
+        rlWithoutFE: lucid.length - fe.length,
+        rlWithFE: fe.length,
+        total: lucid.length,
       })
     }
 
@@ -115,58 +115,90 @@ function Techniques() {
   }, [recentDreams])
 
   const ssildStats = useMemo(() => {
-    const attempts = dreams
-      .map((dream) => dream.techniqueTracking?.ssild)
-      .filter(Boolean)
+  const attempts = dreams.flatMap((dream) => {
+    const tracking = dream.techniqueTracking
 
-    const completed = attempts.filter(
-      (tracking) => tracking.completed === true,
+    if (Array.isArray(tracking?.ssildAttempts)) {
+      return tracking.ssildAttempts
+    }
+
+    // Compatibilité avec les anciens rêves
+    return tracking?.ssild ? [tracking.ssild] : []
+  })
+
+  const resultCounts = {
+    rl: 0,
+    fe: 0,
+    falseSleep: 0,
+    rn: 0,
+  }
+
+  attempts.forEach((attempt) => {
+    const results = attempt.results || (
+      attempt.result ? [attempt.result] : []
     )
 
-    const notCompleted = attempts.filter(
-      (tracking) => tracking.completed === false,
+    if (results.includes('rl')) resultCounts.rl++
+    if (results.includes('fe')) resultCounts.fe++
+    if (results.includes('false-sleep')) resultCounts.falseSleep++
+    if (results.includes('rn')) resultCounts.rn++
+  })
+
+  const completed = attempts.filter(
+    (attempt) => attempt.completed === true
+  )
+
+  const notCompleted = attempts.filter(
+    (attempt) => attempt.completed === false
+  )
+
+  const withAS = attempts.filter(
+    (attempt) => attempt.preparations?.as
+  )
+
+  const withWBTB = attempts.filter(
+    (attempt) => attempt.preparations?.wbtb
+  )
+
+  // Une tentative compte une seule fois, même avec plusieurs résultats
+  const successfulAttempts = attempts.filter((attempt) => {
+    const results = attempt.results || [attempt.result]
+
+    return results.some((result) =>
+      ['rl', 'fe', 'false-sleep'].includes(result)
     )
+  })
 
-    const withAS = attempts.filter(
-      (tracking) => tracking.preparations?.as,
-    )
+  const cycleStats = {}
 
-    const withWBTB = attempts.filter(
-      (tracking) => tracking.preparations?.wbtb,
-    )
+  successfulAttempts.forEach((attempt) => {
+    const key = `${attempt.fastCycles ?? 0}-${attempt.slowCycles ?? 0}`
+    cycleStats[key] = (cycleStats[key] || 0) + 1
+  })
 
-    // Tentatives ayant abouti à un rêve lucide
-    const successfulAttempts = attempts.filter(
-      (tracking) => tracking.result === 'rl',
-    )
+  const cycles = Object.entries(cycleStats)
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => {
+      const [aFast, aSlow] = a.label.split('-').map(Number)
+      const [bFast, bSlow] = b.label.split('-').map(Number)
 
-    // Cycles uniquement des tentatives ayant abouti à un RL
-    const cycleStats = {}
-
-    successfulAttempts.forEach((tracking) => {
-      const key = `${tracking.fastCycles ?? 0}-${tracking.slowCycles ?? 0}`
-      cycleStats[key] = (cycleStats[key] || 0) + 1
+      return aFast - bFast || aSlow - bSlow
     })
 
-    const cycles = Object.entries(cycleStats)
-      .map(([label, count]) => ({ label, count }))
-      .sort((a, b) => {
-        const [aFast, aSlow] = a.label.split('-').map(Number)
-        const [bFast, bSlow] = b.label.split('-').map(Number)
-
-        return aFast - bFast || aSlow - bSlow
-      })
-
-    return {
-      total: attempts.length,
-      completed: completed.length,
-      notCompleted: notCompleted.length,
-      successful: successfulAttempts.length,
-      withAS: withAS.length,
-      withWBTB: withWBTB.length,
-      cycles,
-    }
-  }, [dreams])
+  return {
+    total: attempts.length,
+    rl: resultCounts.rl,
+    fe: resultCounts.fe,
+    falseSleep: resultCounts.falseSleep,
+    rn: resultCounts.rn,
+    completed: completed.length,
+    notCompleted: notCompleted.length,
+    successful: successfulAttempts.length,
+    withAS: withAS.length,
+    withWBTB: withWBTB.length,
+    cycles,
+  }
+}, [dreams])
 
   if (loading) {
     return (
@@ -231,8 +263,8 @@ function Techniques() {
                 <tr>
                   <th>Mois</th>
                   <th>RL</th>
-                  <th>FE</th>
-                  <th>RL sans FE</th>
+                  <th>RL (FE)</th>
+                  <th>Total</th>
                 </tr>
               </thead>
 
@@ -240,9 +272,9 @@ function Techniques() {
                 {monthlyStats.map((month) => (
                   <tr key={month.key}>
                     <td>{month.label}</td>
-                    <td>{month.lucid}</td>
-                    <td>{month.fe}</td>
-                    <td>{month.lucidWithoutFE}</td>
+                    <td>{month.rlWithoutFE}</td>
+                    <td>{month.rlWithFE}</td>
+                    <td>{month.total}</td>
                   </tr>
                 ))}
               </tbody>
@@ -279,28 +311,59 @@ function Techniques() {
                 Vue d'ensemble
               </h3>
 
-              <div className="techniques-stats-grid">
-                <StatCard
-                  label="Tentatives"
-                  value={ssildStats.total}
-                  description="Enregistrées dans tes rêves"
-                />
+              <div className="ssild-overview">
+                <div className="ssild-activity">
+                  <span className="ssild-label">ACTIVITÉ</span>
+                  <div className="ssild-activity-number">
+                    <strong>{ssildStats.total}</strong>
+                    <span>tentatives enregistrées</span>
+                  </div>
 
-                <StatCard
-                  label="Menées à terme"
-                  value={ssildStats.completed}
-                />
+                  <div className="ssild-activity-details">
+                    <span>{ssildStats.completed} terminées</span>
+                    <span>{ssildStats.notCompleted} non terminées</span>
+                  </div>
 
-                <StatCard
-                  label="Non terminées"
-                  value={ssildStats.notCompleted}
-                />
-
-                <StatCard
-                  label="Ayant abouti à un RL"
-                  value={ssildStats.successful}
-                  description="Résultat RL uniquement"
-                />
+                  <div className="ssild-progress">
+                    <div
+                      className="ssild-progress-completed"
+                      style={{
+                        width: `${
+                          ssildStats.total
+                            ? (ssildStats.completed / ssildStats.total) * 100
+                            : 0
+                        }%`,
+                      }}
+                    />
+                  </div>
+                </div>
+                    
+                <div className="ssild-results">
+                  <h4>Résultats obtenus</h4>
+                  {[
+                    { label: 'Rêves lucides', value: ssildStats.rl || 0 },
+                    { label: 'Faux éveils', value: ssildStats.fe || 0 },
+                    { label: 'Faux endormissements', value: ssildStats.falseSleep || 0 },
+                    { label: 'Rêves non lucides', value: ssildStats.rn || 0 },
+                  ].map((item) => (
+                    <div className="ssild-stat-line" key={item.label}>
+                      <span>{item.label}</span>
+                      <strong>{item.value}</strong>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="ssild-preparations-summary">
+                  <h4>Préparations</h4>
+                  <div className="ssild-stat-line">
+                    <span>Avec AS</span>
+                    <strong>{ssildStats.withAS} tentatives</strong>
+                  </div>
+                  <div className="ssild-stat-line">
+                    <span>Avec WBTB</span>
+                    <strong>{ssildStats.withWBTB} tentatives</strong>
+                  </div>
+                </div>
               </div>
 
               <h3 className="techniques-section-title">
@@ -320,7 +383,7 @@ function Techniques() {
               </div>
 
               <h3 className="techniques-section-title">
-                Cycles ayant abouti à un RL
+                Cycles ayant abouti à un RL, FE, FNE
               </h3>
 
               <div className="techniques-results-list">
